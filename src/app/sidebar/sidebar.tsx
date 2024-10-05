@@ -62,11 +62,11 @@ const Sidebar: React.FC = () => {
 
             {/* Sign option */}
             <nav className="flex-grow space-y-4 text-base"><h2 className="text-xs font-semibold uppercase">Sign option</h2>
-                <a href="#signin" className="flex items-center px-4 py-2 rounded-md">
+                <a href="/chatSection" className="flex items-center px-4 py-2 rounded-md">
                     <FaSignInAlt className="mr-3 text-lg" />
                     Sign In
                 </a>
-                <a href="#signup" className="flex items-center px-4 py-2 rounded-md">
+                <a href="/navbar" className="flex items-center px-4 py-2 rounded-md">
                     <FaUserPlus className="mr-3 text-lg" />
                     Sign Up
                 </a>
@@ -112,7 +112,7 @@ const Sidebar: React.FC = () => {
 
             {/* Settings Popup */}
             {showSettings && (
-                <div ref={settingsRef} className="fixed bottom-16 left-16  p-4 rounded-lg shadow-lg w-64 border-2 border-blue-500">
+                <div ref={settingsRef} className="fixed bottom-16 left-16  p-4 rounded-lg shadow-lg w-52 border-2 border-blue-500">
                     <div className="flex items-center justify-between">
                     <span className="flex items-center">
     {/* Conditional rendering for icon and text based on theme */}
@@ -129,8 +129,8 @@ const Sidebar: React.FC = () => {
     )}
 </span>
                         <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" className="sr-only" checked={theme === 'dark'} onChange={toggleTheme} />
-                            <div className="w-11 h-6 bg-gray-300 rounded-full peer dark:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                            <input type="checkbox" className="sr-only peer" checked={theme === 'dark'} onChange={toggleTheme} />
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer dark:bg-blue-600 peer-checked:bg-blue-600 peer-checked:after:bg-white  after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-black after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                         </label>
                     </div>
                 </div>

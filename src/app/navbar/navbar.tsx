@@ -62,12 +62,12 @@ const Navbar: React.FC = () => {
         <a href="#signin" className="text-gray-500 hover:text-gray-700">
           <FaSignInAlt className="text-xl" />
         </a>
-        <a href="#notifications" className="text-gray-500 hover:text-gray-700">
+        {/* <a href="#notifications" className="text-gray-500 hover:text-gray-700">
           <FaBell className="text-xl" />
         </a>
         <a href="#settings" className="text-gray-500 hover:text-gray-700">
           <FaCog className="text-xl" />
-        </a>
+        </a> */}
       </div>
     </div>
   );
