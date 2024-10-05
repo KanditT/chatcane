@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #181818; /* Dark background */
+  --foreground: #f5f5f5; /* Dark text color */
+}
+
+@media (prefers-color-scheme: dark) {
+  
+  :root {
+    --background: #181818;
+    --foreground: #ededed;
+    --aTextColor: rgb(194, 196, 199);
+    --aBGHover: rgb(88, 112, 150);
+    --aHoverTextColor: rgb(209, 213, 219);
+    --asideBG: #3d3d3d;
+    --h2Color: rgb(156, 163, 175);
+    --navBG: #181818;
+    --navascargb: rgb(21, 122, 119);
+  }
+  .dark {
+    --background: #f7f7f7; /* Dark background */
+    --foreground: #000000; /* Dark text color */
+    --aTextColor: rgb(17, 17, 18);
+    --aBGHover: rgb(180, 183, 188);
+    --aHoverTextColor: rgb(0, 24, 59); 
+    --asideBG: #c3c3c3;
+    --h2Color: rgb(0, 0, 0);
+    --navBG: #6c6c6c;
+  }
+}
+aside h2 {
+  color: var(--h2Color);
+}
+aside a {
+  color: var(--aTextColor);
+  transition: all 0.3s;
+}
+a:hover {
+  background-color: var(--aBGHover);
+  color: var(--aHoverTextColor);
+}
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+div{
+  color: var(--foreground);
+  background: var(--background);
+}
+aside{
+  background: var(--asideBG);
+  color: var(--foreground);
+}
+.navcolor{
+  background: var(--navBG);
+  color: var(--foreground);
+}
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
