@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Eye icons
-import cclogo from "/images/cclogo.png";
+import cclogo from "/images/green.png";
 import gglogo from "/images/google-icon-logo-svgrepo-com.png";
 
 const Login = () => {
@@ -78,7 +78,7 @@ const Login = () => {
 
       {/* Right Side: Background Image */}
       <div className="hidden lg:block w-1/2">
-        <div className="relative h-full">
+        <div className="relative h-[calc(90%)] w-[calc(90%)]">
           <Image
             src={cclogo}
             alt="Background"

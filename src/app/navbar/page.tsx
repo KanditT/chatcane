@@ -1,5 +1,5 @@
 import Image from "next/image";
-import cclogo from '/images/cclogo.png';   // Light mode logo
+import cclogo from '/images/green.png';   // Light mode logo
 
 const Login = () => {
   return (
