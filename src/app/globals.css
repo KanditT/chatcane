@@ -48,6 +48,10 @@ a:hover {
   background-color: var(--aBGHover);
   color: var(--aHoverTextColor);
 }
+/* aside a:focus {
+  background-color: var(--navascargb);
+  color: var(--aHoverTextColor);
+} */
 body {
   color: var(--foreground);
   background: var(--background);
