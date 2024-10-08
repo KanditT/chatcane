@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
 
   return (
     <div
-      className={`fixed top-3 justify-center ${isSidebarCollapsed ? 'sm:left-[5rem]' : 'sm:left-[calc(16rem+1.5rem)]'} w-full sm:w-[calc(100%-16rem-1.5rem)] sm:justify-between rounded-lg flex items-center p-4 h-16 transition-all duration-300`}
+      className={`z-20 fixed top-3 justify-center ${isSidebarCollapsed ? 'sm:left-[5rem] sm:w-[calc(100%-5rem-1.5rem)]' : 'sm:left-[calc(16rem+1.5rem)] sm:w-[calc(100%-16rem-3rem)]'} w-full  sm:justify-between rounded-lg flex items-center p-4 h-16 transition-all duration-300`}
     >
       {/* Breadcrumb / Page Title */}
       <div className="flex justify-center sm:justify-start space-x-2">
@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
 
       {/* Right Aligned Navbar Items */}
       <div className="flex flex-col justify-end space-x-6 sm:justify-between">
-        <button onClick={handleLoginClick} className="flex text-gray-500 hover:text-gray-700">
+        <button onClick={handleLoginClick} className=" flex text-gray-500 hover:text-gray-700">
           <FaSignInAlt className="text-xl" />
         </button>
       </div>

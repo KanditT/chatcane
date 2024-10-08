@@ -52,7 +52,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Main Content with Navbar */}
             <div className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'sm:ml-16' : 'sm:ml-64'} p-6`}>
               <Navbar isSidebarCollapsed={isSidebarCollapsed} />
-              <div className="mt-6 flex-1">
+              <div className=" mt-6 flex-1">
                 {children}
               </div>
             </div>
