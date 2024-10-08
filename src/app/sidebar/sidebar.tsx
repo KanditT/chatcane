@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isSidebarOpen, showSettings]); // Re-run when `isSidebarOpen` or `showSettings` changes
+    }, [isSidebarOpen, showSettings, toggleSidebar]); // Re-run when `isSidebarOpen`, `showSettings`, or `toggleSidebar` changes
 
     const toggleTheme = () => {
         if (document.documentElement.classList.contains('dark')) {

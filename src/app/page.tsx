@@ -1,6 +1,4 @@
-import Image from "next/image";
-import Sidebar from "./sidebar/sidebar";
-import Navbar from "./navbar/navbar";
+
 import Chat from "./chatSection/chat";
 
 export default function Home() {

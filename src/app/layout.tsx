@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
 'use client';
+// import type { Metadata } from "next";
+// import localFont from "next/font/local";
+
 import "./globals.css";
 import React, { useState } from 'react';
-import Sidebar from "./sidebar/sidebar";
+import Sidebar from "./sidebar/sideMINI";
 import Navbar from "./navbar/navbar";
 import { ThemeProvider } from './themeContext';
 import { FaBars } from 'react-icons/fa';
