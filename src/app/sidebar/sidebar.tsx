@@ -175,7 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
 
             {/* Settings Popup */}
             {showSettings && (
-                <div ref={settingsRef} className="fixed bottom-16 left-16 p-4 rounded-lg shadow-lg w-52 border-2 border-blue-500">
+                <div ref={settingsRef} className="fixed bottom-8 left-8 p-4 rounded-lg shadow-lg w-52 border-2 border-blue-500">
                     <div className="flex items-center justify-between">
                         <span className="flex items-center">
                             {theme === 'dark' ? (

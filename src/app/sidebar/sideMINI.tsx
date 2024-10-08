@@ -92,14 +92,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                     onClick={() => navigateTo('/login', 'login')}
                     className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'login' ? 'bg-green-500 text-white' : ''}`}
                 >
-                    <FaSignInAlt className="mr-3 text-lg" />
+                    <FaSignInAlt className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Login'}
                 </button>
                 <button
                     onClick={() => navigateTo('/signup', 'signup')}
                     className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'signup' ? 'bg-green-500 text-white' : ''}`}
                 >
-                    <FaUserPlus className="mr-3 text-lg" />
+                    <FaUserPlus className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Sign Up'}
                 </button>
 
@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                     onClick={() => navigateTo('/', 'home')}
                     className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'home' ? 'bg-blue-500 text-white' : ''}`}
                 >
-                    <FaHome className="mr-3 text-lg" />
+                    <FaHome className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Dashboard'}
                 </button>
             </nav>
@@ -118,14 +118,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                     onClick={() => handleLinkClick('help')}
                     className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'help' ? 'bg-blue-500 text-white' : ''}`}
                 >
-                    <FaQuestionCircle className="mr-3 text-lg" />
+                    <FaQuestionCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Help'}
                 </button>
                 <button
                     onClick={() => handleLinkClick('about')}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'about' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`flex items-center ${isSidebarCollapsed ? ' justify-center ' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'about' ? 'bg-blue-500 text-white' : ''}`}
                 >
-                    <FaInfoCircle className="mr-3 text-lg" />
+                    <FaInfoCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+
                     {!isSidebarCollapsed && 'About Us'}
                 </button>
                 <button
@@ -135,13 +136,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                     }}
                     className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md cursor-pointer w-full ${activeLink === 'settings' ? 'bg-blue-500 text-white' : ''}`}
                 >
-                    <FaCog className="mr-3 text-lg" />
+                    <FaCog className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Settings'}
                 </button>
             </nav>
 
             {showSettings && (
-                <div ref={settingsRef} className="fixed bottom-16 left-20 p-4 rounded-lg shadow-lg w-52 border-2 border-blue-500 bg-white dark:bg-gray-800">
+                <div ref={settingsRef} className="fixed bottom-12 left-8 p-3 rounded-lg shadow-lg w-48 border-2 border-blue-500 bg-white dark:bg-gray-800">
                     <div className="flex items-center justify-between">
                         <span className="flex items-center">
                             {theme === 'dark' ? (

@@ -1,63 +1,62 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { useRouter } from 'next/navigation';
 import "../globals.css";
 import Image from 'next/image';
-import cclogo from '/images/cclogo.png';   // Light mode logo
+import cclogo from '/images/cclogo.png'; // Light mode logo
 import cclogol from '/images/cclogol.png'; // Dark mode logo
 import { FaSignInAlt } from 'react-icons/fa';
 
-const Navbar: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const router = useRouter(); // Initialize the router for navigation
+interface NavbarProps {
+  isSidebarCollapsed: boolean;
+}
 
-  // Use useEffect to detect theme changes
+const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
-    // Detect if the 'dark' class is applied to the document element (html tag)
     const themeCheck = () => {
       const darkModeEnabled = document.documentElement.classList.contains('dark');
       setIsDarkMode(darkModeEnabled);
     };
 
-    themeCheck(); // Run once when component mounts
+    themeCheck();
 
-    // Optional: Add an event listener to handle theme changes dynamically
     const observer = new MutationObserver(() => {
-      themeCheck(); // Run every time there's a change in the class list on the html element
+      themeCheck();
     });
 
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // Cleanup the observer when component unmounts
     return () => observer.disconnect();
   }, []);
 
-  // Handle click for logo
   const handleLogoClick = () => {
-    router.push('/'); // Navigate to the homepage
+    router.push('/');
   };
 
-  // Handle click for login
   const handleLoginClick = () => {
-    router.push('/login'); // Navigate to the login page
+    router.push('/login');
   };
 
   return (
-    <div className="fixed  top-3 justify-center sm:left-[calc(16rem+1.5rem)] w-full sm:w-[calc(100%-16rem-1.5rem)] sm:justify-between rounded-lg flex items-center p-4 h-16">
+    <div
+      className={`fixed top-3 justify-center ${isSidebarCollapsed ? 'sm:left-[5rem]' : 'sm:left-[calc(16rem+1.5rem)]'} w-full sm:w-[calc(100%-16rem-1.5rem)] sm:justify-between rounded-lg flex items-center p-4 h-16 transition-all duration-300`}
+    >
       {/* Breadcrumb / Page Title */}
       <div className="flex justify-center sm:justify-start space-x-2">
-        <span className="relative h-12 w-12 mx-auto sm:mx-0"> {/* Adjust container size */}
-          <button onClick={handleLogoClick} className="w-full h-full"> {/* Add onClick to navigate */}
+        <span className="relative h-12 w-12 mx-auto sm:mx-0">
+          <button onClick={handleLogoClick} className="w-full h-full">
             <Image
-              src={isDarkMode ? cclogol : cclogo}  // Dynamic image based on theme
+              src={isDarkMode ? cclogol : cclogo}
               alt="Logo"
-              fill  // Using 'fill' to fill the container
-              style={{ objectFit: 'contain' }}  // Ensure logo fits within the container
+              fill
+              style={{ objectFit: 'contain' }}
             />
           </button>
         </span>
-        {/* Optional text can be shown on larger screens */}
       </div>
 
       {/* Right Aligned Navbar Items */}
