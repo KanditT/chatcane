@@ -1,18 +1,19 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaHome,  FaSignInAlt, FaUserPlus, FaCog, FaInfoCircle, FaQuestionCircle, FaMoon, FaSun, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-// FaUser, FaTable, FaBell,
+import { FaHome, FaSignInAlt, FaUserPlus, FaCog, FaInfoCircle, FaQuestionCircle, FaMoon, FaSun, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
 interface SidebarProps {
     isSidebarOpen: boolean;
     toggleSidebar: () => void;
+    isSidebarCollapsed: boolean;
+    toggleSidebarCollapse: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSidebarCollapsed, toggleSidebarCollapse }) => {
     const [theme, setTheme] = useState('light');
     const [showSettings, setShowSettings] = useState(false);
     const [activeLink, setActiveLink] = useState('');
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const settingsRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -57,15 +58,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
         router.push(path);
     };
 
-    const toggleSidebarCollapse = () => {
-        setIsSidebarCollapsed(!isSidebarCollapsed);
-    };
-
     return (
         <div
             ref={sidebarRef}
-            className={`absolute top-3 left-3 h-[calc(100vh-1.5rem)] ${isSidebarCollapsed ? 'w-16' : 'w-64'} flex flex-col border border-gray-700 rounded-lg p-4 z-100 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                } sm:relative sm:translate-x-0`}
+            className={`absolute top-3 left-3 h-[calc(100vh-1.5rem)] ${isSidebarCollapsed ? 'w-16' : 'w-64'} flex flex-col border border-gray-700 rounded-lg p-4 z-100 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0`}
         >
             <span className="sm:hidden p-2 text-right w-full">
                 <button onClick={toggleSidebar} className="text-xl">
@@ -73,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
                 </button>
             </span>
 
-            <button onClick={toggleSidebarCollapse} className="mb-4 mt-2 text-xl hidden  sm:block ">
+            <button onClick={toggleSidebarCollapse} className="mb-4 mt-2 text-xl hidden sm:block">
                 {isSidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
             </button>
             <span className={`flex items-end justify-center h-12 mb-4 ${isSidebarCollapsed ? 'hidden' : ''}`}>
@@ -85,7 +81,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                     }}
-                ><a onClick={() => navigateTo('/', 'home')}>Chat CANE</a>
+                >
+                    <a onClick={() => navigateTo('/', 'home')}>Chat CANE</a>
                 </h1>
             </span>
 
@@ -114,27 +111,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar }) => {
                     <FaHome className="mr-3 text-lg" />
                     {!isSidebarCollapsed && 'Dashboard'}
                 </button>
-                {/* <button
-                    onClick={() => navigateTo('/profile', 'profile')}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'profile' ? 'bg-blue-500 text-white' : ''}`}
-                >
-                    <FaUser className="mr-3 text-lg" />
-                    {!isSidebarCollapsed && 'Profile'}
-                </button>
-                <button
-                    onClick={() => navigateTo('/tables', 'tables')}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'tables' ? 'bg-blue-500 text-white' : ''}`}
-                >
-                    <FaTable className="mr-3 text-lg" />
-                    {!isSidebarCollapsed && 'Tables'}
-                </button>
-                <button
-                    onClick={() => navigateTo('/notifications', 'notifications')}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'notifications' ? 'bg-blue-500 text-white' : ''}`}
-                >
-                    <FaBell className="mr-3 text-lg" />
-                    {!isSidebarCollapsed && 'Notifications'}
-                </button> */}
             </nav>
 
             <nav className={`space-y-2 mt-auto ${isSidebarCollapsed ? 'text-xs' : 'text-base'}`}>

@@ -1,6 +1,4 @@
 'use client';
-// import type { Metadata } from "next";
-// import localFont from "next/font/local";
 
 import "./globals.css";
 import React, { useState } from 'react';
@@ -8,7 +6,6 @@ import Sidebar from "./sidebar/sideMINI";
 import Navbar from "./navbar/navbar";
 import { ThemeProvider } from './themeContext';
 import { FaBars } from 'react-icons/fa';
-
 import { ReactNode } from 'react';
 
 interface LayoutProps {
@@ -17,9 +14,14 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   return (
@@ -38,14 +40,19 @@ export default function Layout({ children }: LayoutProps) {
               />
             </div>
             {/* Sidebar for medium to large screens */}
-            <div className={`fixed z-50 top-0 left-0 h-full sm:w-64 sm:block ${isSidebarOpen ? 'block' : 'hidden'}`}>
-              <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            <div className={`fixed z-50 top-0 left-0 h-full transition-width duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'} ${isSidebarOpen ? 'block' : 'hidden'} sm:block`}>
+              <Sidebar
+                isSidebarOpen={isSidebarOpen}
+                toggleSidebar={toggleSidebar}
+                isSidebarCollapsed={isSidebarCollapsed}
+                toggleSidebarCollapse={toggleSidebarCollapse}
+              />
             </div>
 
             {/* Main Content with Navbar */}
-            <div className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'} sm:ml-64 p-6`}>
+            <div className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'sm:ml-16' : 'sm:ml-64'} p-6`}>
               <Navbar />
-              <div className="mt-6 flex-1 ">
+              <div className="mt-6 flex-1">
                 {children}
               </div>
             </div>
