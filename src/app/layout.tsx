@@ -24,6 +24,14 @@ export default function Layout({ children }: LayoutProps) {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  const handleSidebarOpen = () => {
+    toggleSidebar();
+    if (isSidebarCollapsed) {
+        toggleSidebarCollapse();
+    }
+};
+
+
   return (
     <ThemeProvider>
       <html lang="en">
@@ -33,10 +41,10 @@ export default function Layout({ children }: LayoutProps) {
         <body className="bg-gray-100 h-screen overflow-hidden">
           <div className="flex h-full">
             {/* Hamburger Icon for smaller screens */}
-            <div className="sm:hidden p-4 fixed z-20">
+            <div className="sm:hidden p-4 fixed z-30">
               <FaBars
                 className="text-2xl cursor-pointer"
-                onClick={toggleSidebar}
+                onClick={handleSidebarOpen}
               />
             </div>
             {/* Sidebar for medium to large screens */}

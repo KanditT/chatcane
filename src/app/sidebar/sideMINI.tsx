@@ -58,20 +58,44 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
         router.push(path);
     };
 
+    // const handleSidebarOpen = () => {
+    //     toggleSidebar();
+    //     if (isSidebarCollapsed) {
+    //         toggleSidebarCollapse();
+    //     }
+    // };
+    
+
     return (
         <div
             ref={sidebarRef}
-            className={`absolute top-3 left-3 h-[calc(100vh-1.5rem)] ${isSidebarCollapsed ? 'w-16' : 'w-64'} flex flex-col border border-gray-700 rounded-lg p-4 z-100 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0`}
+            className={`absolute top-3 left-3 h-[calc(100vh-1.5rem)] ${isSidebarCollapsed ? 'w-16' : 'w-64'} flex flex-col rounded-lg p-4 z-100 transition-transform transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} sm:relative sm:translate-x-0 duration-300 ease-in-out`}
         >
+
             <span className="sm:hidden p-2 text-right w-full">
                 <button onClick={toggleSidebar} className="text-xl">
                     ✕
                 </button>
             </span>
 
-            <button onClick={toggleSidebarCollapse} className="mb-4 mt-2 text-xl hidden sm:block">
-                {isSidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+            {/* icom < and > */}
+            <button
+                onClick={toggleSidebarCollapse}
+                className="mb-4 mt-2 text-xl hidden sm:flex items-center transition-transform duration-300 ease-in-out"
+            >
+                <span
+                    className="relative w-6 h-6 flex items-center justify-center"
+                    style={{ width: '24px', height: '24px' }}
+                >
+                    <FaChevronRight
+                        className={`absolute transition-opacity duration-300 ease-in-out ${isSidebarCollapsed ? 'opacity-100' : 'opacity-0'}`}
+                    />
+                    <FaChevronLeft
+                        className={`absolute transition-opacity duration-300 ease-in-out ${isSidebarCollapsed ? 'opacity-0' : 'opacity-100'}`}
+                    />
+                </span>
             </button>
+
             <span className={`flex items-end justify-center h-12 mb-4 ${isSidebarCollapsed ? 'hidden' : ''}`}>
                 <h1
                     className="text-transparent bg-clip-text text-4xl font-bold"
@@ -116,14 +140,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
             <nav className={`space-y-2 mt-auto ${isSidebarCollapsed ? 'text-xs' : 'text-base'}`}>
                 <button
                     onClick={() => handleLinkClick('help')}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'help' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md w-full ${activeLink === 'help' ? 'bg-blue-500 text-white' : ''}`}
                 >
                     <FaQuestionCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Help'}
                 </button>
                 <button
                     onClick={() => handleLinkClick('about')}
-                    className={`flex items-center ${isSidebarCollapsed ? ' justify-center ' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'about' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md w-full ${activeLink === 'about' ? 'bg-blue-500 text-white' : ''}`}
                 >
                     <FaInfoCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
 
@@ -134,7 +158,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         handleLinkClick('settings');
                         toggleSettingsPopup();
                     }}
-                    className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md cursor-pointer w-full ${activeLink === 'settings' ? 'bg-blue-500 text-white' : ''}`}
+                    className={`flex items-center  ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md cursor-pointer w-full ${activeLink === 'settings' ? 'bg-blue-500 text-white' : ''}`}
                 >
                     <FaCog className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
                     {!isSidebarCollapsed && 'Settings'}
