@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
       {/* Breadcrumb / Page Title */}
       <div className="flex justify-center sm:justify-start space-x-2">
         <span className="relative h-12 w-12 mx-auto sm:mx-0">
-          <button onClick={handleLogoClick} className="w-full h-full">
+          <button onClick={handleLogoClick} className="w-full h-full ">
             <Image
               src={isDarkMode ? cclogol : cclogo}
               alt="Logo"
@@ -60,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ isSidebarCollapsed }) => {
       </div>
 
       {/* Right Aligned Navbar Items */}
-      <div className="flex flex-col justify-end space-x-6 sm:justify-between">
+      <div className=" flex-col justify-end space-x-6 sm:justify-between hidden sm:flex">
         <button onClick={handleLoginClick} className=" flex text-gray-500 hover:text-gray-700">
           <FaSignInAlt className="text-xl" />
         </button>
