@@ -25,17 +25,25 @@
     --h2Color: rgb(156, 163, 175);
     --navBG: #181818;
     --navascargb: rgb(21, 122, 119);
+    --sideTitlebg: #272726;
   }
   .dark {
-    --background: #f7f7f7; /* Dark background */
-    --foreground: #000000; /* Dark text color */
-    --aTextColor: rgb(17, 17, 18);
+    --background: #ffffff; /* Dark background */
+    --foreground: #1a313d; /* Dark text color */
+    --aTextColor: #1a313d;
     --aBGHover: rgb(180, 183, 188);
     --aHoverTextColor: rgb(0, 24, 59); 
-    --asideBG: #c3c3c3;
+    --asideBG: #f4ece7;
     --h2Color: rgb(0, 0, 0);
     --navBG: #f7f7f7;
+    --login: #dcfefd;
+    --sideTitlebg: #c8ad93;
   }
+}
+
+.sideTitle{
+  background: var(--sideTitlebg);
+
 }
 aside h2 {
   color: var(--h2Color);
@@ -57,13 +65,23 @@ div{
   color: var(--foreground);
   background: var(--background);
 }
-aside{
+.aside{
   background: var(--asideBG);
   color: var(--foreground);
 }
 .navcolor{
   background: var(--navBG);
   color: var(--foreground);
+}
+/* Hide scrollbar but keep scroll functional */
+.no-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
 }
 
 

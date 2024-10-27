@@ -1,16 +1,37 @@
-'use client';
+'use client'; // Use Next.js client-side rendering
 import React, { useState } from "react";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Eye icons
 import cclogo from "/images/blue.png";
-import gglogo from "/images/google-icon-logo-svgrepo-com.png";
+import gglogo from "/images/google-icon-logo-svgrepo-com.png"; // Correct path to Google logo
+// Import any functions or logic from register.js if needed
+import {registerUser} from "../register.js"; // Correct path to register.js
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../firebase";
 
 const SignUp = () => {
+    const [email, setEmail] = useState("");
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    
+    const handleGoogle = async () => {
+        try {
+            const provider = await new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            // Google sign-in successful
+            console.log("Google Sign-Up Success:", result);
+            
+            // Redirect to localhost after successful sign-in
+            window.location.href = "/login"; // เปลี่ยนเป็น URL ที่ต้องการ
+        } catch (error) {
+            console.error("Google Sign-Up Error:", error);
+            alert("Error during Google sign-in. Please try again.");
+        }
+    };
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
@@ -20,14 +41,29 @@ const SignUp = () => {
         setConfirmPasswordVisible(!confirmPasswordVisible);
     };
 
-    const handleSignUp = () => {
-        // Check if the passwords match
+    const handleSignUp = async () => {
+        if (!email || !password || !confirmPassword) {
+            alert("Please enter your e-mail, password, and confirm password");
+            return;
+        }
+
         if (password !== confirmPassword) {
             setPasswordError("Passwords do not match");
         } else {
             setPasswordError("");
-            // Proceed with sign-up logic
-            console.log("Passwords match. Proceed with sign-up...");
+            try {
+                const user = await registerUser(email, password);
+                console.log("User registered:", user);
+                alert("Registration successful!");
+                window.location.href = "/login"; // Redirect to home page
+            } catch (error) {
+                if (error instanceof Error) {
+                    alert(`Error during registration: ${error.message}`);
+                } else {
+                    alert("An unknown error occurred during registration.");
+                }
+                console.error("Registration error: ", error);
+            }
         }
     };
 
@@ -40,7 +76,8 @@ const SignUp = () => {
                     <p className="text-aTextColor mb-6">Create an account to get started</p>
 
                     {/* Google Sign-Up Button */}
-                    <button className="w-full py-2 mb-4 bg-white dark:bg-asideBG text-gray-800 dark:text-foreground font-semibold rounded-lg flex items-center justify-center shadow-md hover:bg-aBGHover hover:text-aHoverTextColor">
+                    <button className="w-full py-2 mb-4 bg-white dark:bg-asideBG text-gray-800 dark:text-foreground font-semibold rounded-lg flex items-center justify-center shadow-md hover:bg-aBGHover hover:text-aHoverTextColor"
+                        onClick={handleGoogle}>
                         <Image src={gglogo} alt="Google Icon" className="h-6 w-6 mr-2" />
                         Sign up with Google
                     </button>
@@ -57,6 +94,8 @@ const SignUp = () => {
                         <input
                             type="email"
                             id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="mail@user.com"
                             className="w-full px-4 py-2 bg-asideBG text-neutral-950 dark:bg-navBG rounded-lg border border-gray-700 focus:bg-blue-50 focus:border-blue-500 focus:outline-none"
                         />
