@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Response, session
-from sugarcane_data import sugarcane_info
+import requests  # ใช้ในการ fetch data จาก URL
 from difflib import get_close_matches
 from flask_cors import CORS
 from rapidfuzz import process
@@ -13,21 +13,40 @@ app = Flask(__name__)
 CORS(app)
 app.secret_key = secrets.token_hex(16)
 
+# Function to fetch data from URL
+def fetch_sugarcane_data():
+    url = "https://raw.githubusercontent.com/apiwatfresh/sugarcane-data/refs/heads/main/sugarcane_data.json"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # ตรวจสอบว่าการร้องขอสำเร็จหรือไม่
+        return response.json()  # ดึงข้อมูล JSON จาก URL
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+        return {}  # คืนค่าข้อมูลว่างถ้า fetch ไม่สำเร็จ
+
 # API route สำหรับรับข้อมูลจาก React
 @app.route("/chatbot_full", methods=["GET"])
 def chatbot_full():
     user_input = request.args.get("user_input")
-    full_response = generate_response(user_input)
+    
+    # Fetch data from the external URL
+    sugarcane_info = fetch_sugarcane_data()
+
+    full_response = generate_response(user_input, sugarcane_info)
     return jsonify({"response": full_response})
 
 @app.route("/chatbot_stream")
 def chatbot_stream():
     user_input = request.args.get("user_input")
-    full_response = generate_response(user_input)
+
+    # Fetch data from the external URL
+    sugarcane_info = fetch_sugarcane_data()
+
+    full_response = generate_response(user_input, sugarcane_info)
     return Response(stream_response(full_response), content_type='text/event-stream')
 
 # ฟังก์ชันสร้าง Chatbot พร้อมกับประวัติการสนทนา
-def generate_response(prompt):
+def generate_response(prompt, sugarcane_info):
     # ตรวจสอบว่า session มีประวัติการสนทนาอยู่หรือไม่
     conversation_history = session.get('conversation_history', '')
 
