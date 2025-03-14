@@ -9,8 +9,7 @@ import kandit from '/images/kandit.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useUser } from '../userState';
-// import { useNavigate } from 'react-router-dom';
-// Adjust the path as necessary
+
 
 interface SidebarProps {
     isSidebarOpen: boolean;
@@ -55,7 +54,7 @@ const teamMembers = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSidebarCollapsed, toggleSidebarCollapse }) => {
-    const [theme, setTheme] = useState('light'); 
+    const [theme, setTheme] = useState('light');
     const [showSettings, setShowSettings] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
@@ -85,6 +84,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
         logout()
         router.push('/login');
     };
+
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -150,6 +151,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
         setIsHelpModalOpen(!isHelpModalOpen);
     }
 
+    const handleLogoClick = () => {
+        router.push('/');
+    };
+
     return (
         <div>
             <div
@@ -169,7 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                 >
                     <span
                         className="relative w-6 h-6 flex items-center justify-center"
-                        style={{ width: '24px', height: '24px' }}
+                        style={{width: '24px', height: '24px'}}
                     >
                         <FaChevronRight
                             className={`absolute transition-opacity duration-300 ease-in-out ${isSidebarCollapsed ? 'opacity-100' : 'opacity-0'}`}
@@ -180,28 +185,28 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                     </span>
                 </button>
 
-                <span className={`rounded-xl flex items-center justify-center h-12 mb-4 ${isSidebarCollapsed ? 'hidden' : ''}`}>
-                    <h1
-                        className="titlecolor text-transparent bg-clip-text text-4xl font-bold"
-                        style={{
-                            fontFamily: "'Comic Sans MS', cursive",
-                            ...(theme === 'dark'
-                                ? {
-                                    color: '#028482', // Solid color for better visibility in dark mode
-                                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)', // Shadow to enhance text appearance
-                                }
-                                : {
-                                    background: 'linear-gradient(to right, #f7f70e, #ffff66, #a3ff33, #64ffaa, #64ffdb, #64f0ff)', // Light theme gradient
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                }),
-                        }}
-                    >
-                        <a onClick={() => navigateTo('/', 'home')}>Chat CANE</a>
-                    </h1>
-                </span>
+                {/*<span className={`rounded-xl flex items-center justify-center h-12 mb-4 ${isSidebarCollapsed ? 'hidden' : ''}`}>*/}
+                {/*    <h1*/}
+                {/*        className="titlecolor text-transparent bg-clip-text text-4xl font-bold"*/}
+                {/*        style={{*/}
+                {/*            fontFamily: "'Comic Sans MS', cursive",*/}
+                {/*            ...(theme === 'dark'*/}
+                {/*                ? {*/}
+                {/*                    color: '#028482', // Solid color for better visibility in dark mode*/}
+                {/*                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)', // Shadow to enhance text appearance*/}
+                {/*                }*/}
+                {/*                : {*/}
+                {/*                    background: 'linear-gradient(to right, #f7f70e, #ffff66, #a3ff33, #64ffaa, #64ffdb, #64f0ff)', // Light theme gradient*/}
+                {/*                    WebkitBackgroundClip: 'text',*/}
+                {/*                    WebkitTextFillColor: 'transparent',*/}
+                {/*                }),*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <a onClick={() => navigateTo('/', 'home')}>Chat CANE</a>*/}
+                {/*    </h1>*/}
+                {/*</span>*/}
 
-                <nav className={`flex-grow space-y-4 ${isSidebarCollapsed ? 'text-xs' : 'text-base'} mt-8`}>
+                <nav className={`flex-grow space-y-4 ${isSidebarCollapsed ? 'text-xs' : 'text-base'} mt-3`}>
                     {user === null ? (
                         <>
                             {/* Show Login and Sign Up when no user is logged in */}
@@ -210,37 +215,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                 onClick={() => navigateTo('/login', 'login')}
                                 className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'login' ? 'bg-green-500 text-white' : ''}`}
                             >
-                                <FaSignInAlt className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                                <FaSignInAlt className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                                 {!isSidebarCollapsed && 'Login'}
                             </button>
                             <button
                                 onClick={() => navigateTo('/signup', 'signup')}
                                 className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'signup' ? 'bg-blue-500 text-white' : ''}`}
                             >
-                                <FaUserPlus className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                                <FaUserPlus className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                                 {!isSidebarCollapsed && 'Sign Up'}
                             </button>
                         </>
                     ) : (
                         <>
                             {/* Show Dashboard and Logout when user is logged in */}
-                            {!isSidebarCollapsed && <h2 className=" text-xs font-semibold uppercase">Logout</h2>}
-                            
-                            <button
-                                onClick={handleLogout}
-                                className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md cursor-pointer w-full hover:bg-red-300 active:bg-red-500 hover:text-white`}
-                            >
-                                <FaSignOutAlt className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
-                                {!isSidebarCollapsed && 'Logout'}
-                            </button>
-                            {!isSidebarCollapsed && <h2 className="mt-8 text-xs font-semibold uppercase">Dashboard</h2>}
+
+                            {!isSidebarCollapsed && <h2 className="text-xs font-semibold uppercase">Dashboard</h2>}
                             <button
                                 onClick={() => navigateTo('/', 'home')}
                                 className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md w-full ${activeLink === 'home' ? 'bg-gray-400 text-white' : ''}`}
                             >
-                                <FaHome className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                                <FaHome className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                                 {!isSidebarCollapsed && 'Dashboard'}
                             </button>
+
                         </>
                     )}
                 </nav>
@@ -252,7 +250,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         }}
                         className={`flex items-center ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md w-full ${activeLink === 'help' ? 'bg-orange-400 text-white' : ''}`}
                     >
-                        <FaQuestionCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                        <FaQuestionCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                         {!isSidebarCollapsed && 'Help'}
                     </button>
                     <button
@@ -262,7 +260,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         }}
                         className={`flex items-center ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md w-full ${activeLink === 'about' ? 'bg-orange-400 text-white' : ''}`}
                     >
-                        <FaInfoCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                        <FaInfoCircle className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                         {!isSidebarCollapsed && 'About Us'}
                     </button>
                     <button
@@ -272,30 +270,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         }}
                         className={`flex items-center  ${isSidebarCollapsed ? 'justify-center py-[calc(11px)]' : 'px-2'}  py-2 rounded-md cursor-pointer w-full ${activeLink === 'settings' ? 'bg-orange-400 text-white' : ''}`}
                     >
-                        <FaCog className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`} />
+                        <FaCog className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
                         {!isSidebarCollapsed && 'Settings'}
+                    </button>
+
+                    <button
+                        onClick={handleLogout}
+                        className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'px-4'} py-2 rounded-md cursor-pointer w-full hover:bg-red-300 active:bg-red-500 hover:text-white`}
+                    >
+                        <FaSignOutAlt className={`${isSidebarCollapsed ? 'mr-0' : 'mr-3'} text-lg`}/>
+                        {!isSidebarCollapsed && 'Logout'}
                     </button>
                 </nav>
 
                 {showSettings && (
-                    <div ref={settingsRef} className="fixed bottom-12 left-8 p-3 rounded-lg shadow-lg w-48 border-2 border-blue-500">
+                    <div ref={settingsRef}
+                         className="fixed bottom-12 left-8 p-3 rounded-lg shadow-lg w-48 border-2 border-blue-500">
                         <div className="flex items-center justify-between">
                             <span className="flex items-center">
                                 {theme === 'dark' ? (
                                     <>
-                                        <FaSun className="mr-2" />
+                                        <FaSun className="mr-2"/>
                                         Light Mode
                                     </>
                                 ) : (
                                     <>
-                                        <FaMoon className="mr-2" />
+                                        <FaMoon className="mr-2"/>
                                         Dark Mode
                                     </>
                                 )}
                             </span>
                             <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={theme === 'dark'} onChange={toggleTheme} />
-                                <div className="w-11 h-6 bg-gray-300 rounded-full peer dark:bg-blue-600 peer-checked:bg-blue-600 peer-checked:after:bg-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-black after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                <input type="checkbox" className="sr-only peer" checked={theme === 'dark'}
+                                       onChange={toggleTheme}/>
+                                <div
+                                    className="w-11 h-6 bg-gray-300 rounded-full peer dark:bg-blue-600 peer-checked:bg-blue-600 peer-checked:after:bg-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-black after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
                             </label>
                         </div>
                     </div>
@@ -304,7 +313,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
 
 
             {isHelpModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden">
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden">
                     <div
                         ref={helpModalRef}
                         className="modal-content p-6 rounded-lg shadow-lg w-full max-w-sm max-h-[90vh] m-4 overflow-y-scroll no-scrollbar sm:max-w-xl dark:bg-[#e6dace]">
@@ -352,21 +362,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                 {isEnglish ? (
                                     <>
                                         Here’s how to interact with me:
-                                        <br />
+                                        <br/>
                                         - Type your question in the chatbox below.
-                                        <br />
+                                        <br/>
                                         - Be as specific as possible if you need detailed information.
-                                        <br />
+                                        <br/>
                                         - Try asking about different aspects of sugarcane if you want broader knowledge.
                                     </>
                                 ) : (
                                     <>
                                         นี่คือวิธีการโต้ตอบกับฉัน:
-                                        <br />
+                                        <br/>
                                         - พิมพ์คำถามของคุณลงในช่องแชทด้านล่าง
-                                        <br />
+                                        <br/>
                                         - โปรดระบุรายละเอียดให้มากที่สุดหากต้องการข้อมูลเชิงลึก
-                                        <br />
+                                        <br/>
                                         - ลองถามเกี่ยวกับด้านต่างๆ ของอ้อยหากต้องการความรู้ที่กว้างขึ้น
                                     </>
                                 )}
@@ -390,21 +400,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                 {isEnglish ? (
                                     <>
                                         If I don&apos;t understand your question:
-                                        <br />
+                                        <br/>
                                         - Try rephrasing your question.
-                                        <br />
+                                        <br/>
                                         - Use simpler language.
-                                        <br />
+                                        <br/>
                                         - Ask about a different aspect of sugarcane.
                                     </>
                                 ) : (
                                     <>
                                         หากฉันไม่เข้าใจคำถามของคุณ:
-                                        <br />
+                                        <br/>
                                         - ลองถามในรูปแบบอื่น
-                                        <br />
+                                        <br/>
                                         - ใช้ภาษาที่ง่ายขึ้น
-                                        <br />
+                                        <br/>
                                         - ถามเกี่ยวกับด้านอื่นของอ้อย
                                     </>
                                 )}
@@ -417,7 +427,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                 {isEnglish ?
                                     'If you need more detailed information or assistance, feel free to contact us at ' :
                                     'หากคุณต้องการข้อมูลเพิ่มเติมหรือความช่วยเหลือ โปรดติดต่อเราที่ '}
-                                <a href="mailto:Kandit.t@kkumail.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                <a href="mailto:Kandit.t@kkumail.com" target="_blank" rel="noopener noreferrer"
+                                   className="text-blue-500 hover:underline">
                                     {isEnglish ? 'Kandit.t@kkumail.com' : 'Kandit.t@kkumail.com'}
                                 </a>.
                             </p>
@@ -437,7 +448,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
             )}
 
             {isAboutModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden">
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-hidden">
                     <div
                         ref={aboutModalRef}
                         className="modal-content p-6 rounded-lg shadow-lg w-full max-w-sm max-h-[90vh] m-4 overflow-y-scroll no-scrollbar dark:bg-[#e6dace]"
@@ -451,7 +463,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         <div className="modal-body p-4 rounded-lg dark:bg-[#e6dace]">
                             <div className="grid grid-cols-1 gap-4 dark:bg-[#e6dace]">
                                 {teamMembers.map((member) => (
-                                    <div key={member.name} className="flex flex-col items-center mb-5 p-4 bg-gray-800 rounded-2xl dark:bg-[#f4ece7] text-xl">
+                                    <div key={member.name}
+                                         className="flex flex-col items-center mb-5 p-4 bg-gray-800 rounded-2xl dark:bg-[#f4ece7] text-xl">
                                         <Image
                                             src={member.profileImage}
                                             alt={member.name}
@@ -461,7 +474,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                         />
                                         <h6 className="text-md font-semibold mt-2 text-center">
                                             {member.name}
-                                            <br />
+                                            <br/>
                                             {member.stuID}
                                         </h6>
                                         <div className="flex text-center gap-4 mt-2 bg-gray-800 dark:bg-[#f4ece7]">
@@ -471,7 +484,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                                 rel="noreferrer"
                                                 className="text-blue-500 rounded-xl p-1 hover:underline flex items-center gap-2"
                                             >
-                                                <FontAwesomeIcon icon={faGithub} width={30} height={30} />
+                                                <FontAwesomeIcon icon={faGithub} width={30} height={30}/>
                                                 {member.githubUsername}
                                             </a>
                                         </div>
@@ -482,7 +495,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                                                 rel="noreferrer"
                                                 className="text-red-500 rounded-xl p-1 hover:underline flex items-center gap-2"
                                             >
-                                                <FontAwesomeIcon icon={faInstagram} width={30} height={30} />
+                                                <FontAwesomeIcon icon={faInstagram} width={30} height={30}/>
                                                 {member.instagramUsername}
                                             </a>
                                         </div>
@@ -494,7 +507,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         <div className="modal-body p-4 rounded-lg dark:bg-[#f4ece7] text-lg">
                             <li>The sugarcane industry is a vital component of the agricultural sector.</li>
                             <li>There’re numerous challenges about sugarcane farming.</li>
-                            <li>Farmers often encounter difficulties in accessing and applying the latest agricultural practices.</li>
+                            <li>Farmers often encounter difficulties in accessing and applying the latest agricultural
+                                practices.
+                            </li>
                         </div>
                         <div className='text-2xl font-bold dark:bg-[#e6dace] mt-5 mb-2'>Credits</div>
                         <div className="modal-body text-xl p-4 rounded-lg dark:bg-[#f4ece7] ">
@@ -518,7 +533,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, toggleSidebar, isSideb
                         </div>
                     </div>
                 </div>
+
             )}
+
 
         </div>
     );

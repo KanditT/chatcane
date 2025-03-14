@@ -9,7 +9,9 @@
 //   return currentUser;
 // }
 "use client";
+import { useRouter } from 'next/router';
 import { createContext, useContext, useState, useEffect } from 'react';
+
 
 interface UserContextProps {
   user: string | null;
@@ -28,6 +30,7 @@ export const useUser = () => {
 }
 
 export const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
+  // const router = useRouter();
   const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,6 +48,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user');
+
   }
 
 

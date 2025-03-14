@@ -9,3 +9,4 @@ export const loginUser = async (email, password) => {
     throw new Error(error.message);
   }
 };
+
