@@ -3,7 +3,7 @@
 import "./globals.css";
 import React, { useState } from "react";
 import Sidebar from "./sidebar/sideMINI";
-import Navbar from "./navbar/navbar";
+// import Navbar from "./navbar/navbar";
 import { ThemeProvider } from "./themeContext";
 import { FaBars } from "react-icons/fa";
 import { ReactNode } from "react";
@@ -68,8 +68,8 @@ export default function Layout({ children }: LayoutProps) {
                   isSidebarCollapsed ? "sm:ml-16" : "sm:ml-64"
                 } p-6`}
               >
-                <Navbar isSidebarCollapsed={isSidebarCollapsed} />
-                <div className=" mt-6 flex-1">{children}</div>
+                {/* <Navbar isSidebarCollapsed={isSidebarCollapsed} /> */}
+                <div className="">{children}</div>
               </div>
             </div>
           </UserContextProvider>

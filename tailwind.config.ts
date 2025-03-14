@@ -14,7 +14,7 @@ const config: Config = {
       },
     },
   },
-  darkMode: 'class', // Enables dark mode with a "dark" class on the root element
+  darkMode: "class", // Enables dark mode with a "dark" class on the root element
   plugins: [],
 };
 export default config;
