@@ -1,14 +1,13 @@
-'use client';
+"use client";
 
 import "./globals.css";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Sidebar from "./sidebar/sideMINI";
 import Navbar from "./navbar/navbar";
-import { ThemeProvider } from './themeContext';
-import { FaBars } from 'react-icons/fa';
-import { ReactNode } from 'react';
+import { ThemeProvider } from "./themeContext";
+import { FaBars } from "react-icons/fa";
+import { ReactNode } from "react";
 import { UserContextProvider } from "./userState";
-
 
 interface LayoutProps {
   children: ReactNode;
@@ -33,7 +32,6 @@ export default function Layout({ children }: LayoutProps) {
     }
   };
 
-
   return (
     <ThemeProvider>
       <html lang="en">
@@ -51,7 +49,11 @@ export default function Layout({ children }: LayoutProps) {
                 />
               </div>
               {/* Sidebar for medium to large screens */}
-              <div className={`fixed z-50 top-0 left-0 h-full transition-width duration-300 ${isSidebarCollapsed ? 'w-16' : 'w-64'} ${isSidebarOpen ? 'block' : 'hidden'} sm:block`}>
+              <div
+                className={`fixed z-50 top-0 left-0 h-full transition-width duration-300 ${
+                  isSidebarCollapsed ? "w-16" : "w-64"
+                } ${isSidebarOpen ? "block" : "hidden"} sm:block`}
+              >
                 <Sidebar
                   isSidebarOpen={isSidebarOpen}
                   toggleSidebar={toggleSidebar}
@@ -61,12 +63,13 @@ export default function Layout({ children }: LayoutProps) {
               </div>
 
               {/* Main Content with Navbar */}
-              <div className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'sm:ml-16' : 'sm:ml-64'} p-6`}>
+              <div
+                className={`flex-1 transition-all duration-300 ${
+                  isSidebarCollapsed ? "sm:ml-16" : "sm:ml-64"
+                } p-6`}
+              >
                 <Navbar isSidebarCollapsed={isSidebarCollapsed} />
-                <div className=" mt-6 flex-1">
-
-                  {children}
-                </div>
+                <div className=" mt-6 flex-1">{children}</div>
               </div>
             </div>
           </UserContextProvider>
