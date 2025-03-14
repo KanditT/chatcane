@@ -7,15 +7,11 @@ export default function ChatComponent() {
   const [isGenerating, setIsGenerating] = useState(false); // สถานะบล็อคการถามซ้ำ
   const [typingInterval, setTypingInterval] = useState<NodeJS.Timeout | null>(
     null
-  ); // เก็บ reference ของ interval สำหรับหยุดการพิมพ์
-
-  // Add CSS classes for user and bot messages
+  );
   const appendMessage = (message: string, isUser: boolean = false) => {
     if (messagesRef.current) {
       const messageContainer = document.createElement("div");
       messageContainer.classList.add("message");
-
-      // Align user messages to the right and bot messages to the left
       messageContainer.classList.add(
         isUser ? "user-message-container" : "bot-message-container"
       );
@@ -26,11 +22,10 @@ export default function ChatComponent() {
 
       messageContainer.appendChild(messageElem);
       messagesRef.current.appendChild(messageContainer);
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight; // Scroll to the latest message
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
   };
 
-  // ฟังก์ชันใหม่สำหรับแสดงผลทีละตัวอักษร
   const appendMessageCharByChar = (message: string, delay: number = 50) => {
     if (messagesRef.current) {
       const messageContainer = document.createElement("div");
@@ -44,8 +39,7 @@ export default function ChatComponent() {
       messageElem.classList.add("bot-message");
       messageContainer.appendChild(messageElem);
       messagesRef.current.appendChild(messageContainer);
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight; // Scroll to the latest message
-
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
       let currentIndex = 0;
       const interval = setInterval(() => {
         if (currentIndex < message.length) {
@@ -53,25 +47,24 @@ export default function ChatComponent() {
             message[currentIndex] === "\n" ? "<br>" : message[currentIndex];
           currentIndex++;
           if (messagesRef.current) {
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight; // Scroll as new chars appear
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
           }
         } else {
           clearInterval(interval);
-          setIsGenerating(false); // ปลดล็อคเมื่อ gen ข้อความเสร็จ
+          setIsGenerating(false);
         }
-      }, delay); // delay ระหว่างการแสดงตัวอักษรแต่ละตัว
-      setTypingInterval(interval); // เก็บ reference สำหรับหยุดการสร้าง
+      }, delay);
+      setTypingInterval(interval);
     }
   };
 
-  // ฟังก์ชันหยุดการสร้างข้อความ
   const stopGenerating = () => {
     if (typingInterval) {
-      clearInterval(typingInterval); // หยุด interval
-      setIsGenerating(false); // ปลดล็อคให้สามารถถามได้อีกครั้ง
+      clearInterval(typingInterval);
+      setIsGenerating(false);
       appendMessage(
         "<b style=color:red>Chatbot หยุดการสร้างคำตอบแล้ว.</b><br>"
-      ); // แจ้งว่าหยุดแล้ว
+      );
     }
   };
 
@@ -86,18 +79,17 @@ export default function ChatComponent() {
       appendMessage(
         "<b style=color:red>กรุณารอให้ Chatbot สร้างคำตอบก่อน.</b><br>"
       );
-      return; // ถ้ากำลังสร้างอยู่ให้บล็อกการถามใหม่
+      return;
     }
 
     const userInput = inputRef.current?.value;
     if (userInput && userInput.trim()) {
-      // chatcaneNameElem.innerHTML = '<b style="color:green;">Chatcane:</b><br>';
       appendMessage(`<b><div >คุณ:</div></b>`, true);
       appendMessage(
         `<span style="background-color:#d1d5db;padding: 8px 12px; border-radius: 15px;"> ${userInput}</span>`,
         true
       );
-      setIsGenerating(true); // ล็อคการถามใหม่
+      setIsGenerating(true);
 
       if (inputRef.current) {
         inputRef.current.value = "";
@@ -113,13 +105,13 @@ export default function ChatComponent() {
         );
 
         const data = await response.json();
-        appendMessageCharByChar(`${data.response}`, 50); // ส่งข้อความทีละตัวอักษร
+        appendMessageCharByChar(`${data.response}`, 50);
       } catch (error) {
         console.error("Error fetching response:", error);
         appendMessage(
           "<b style=color:#4c0000>Error:</b><br>ไม่สามารถติดต่อกับ Chatbot ได้."
         );
-        setIsGenerating(false); // ปลดล็อคถ้าเกิดข้อผิดพลาด
+        setIsGenerating(false);
       }
     }
   };
@@ -144,7 +136,7 @@ export default function ChatComponent() {
           className="w-full py-2 px-4 pr-[calc(85px)]  bg-gray-300 text-gray-800 rounded-md focus:outline-none focus:ring focus:border-teal-400"
           ref={inputRef}
           onKeyPress={handleKeyPress}
-          disabled={isGenerating} // ปิดการพิมพ์เมื่อ gen ข้อความอยู่
+          disabled={isGenerating}
         />
         <button
           onClick={isGenerating ? stopGenerating : sendMessage}
