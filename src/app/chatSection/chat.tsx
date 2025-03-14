@@ -81,7 +81,7 @@ export default function ChatComponent() {
         const userInput = inputRef.current?.value;
         if (userInput && userInput.trim()) {
             // chatcaneNameElem.innerHTML = '<b style="color:green;">Chatcane:</b><br>';
-            appendMessage(`<b><div>คุณ:</div></b>`, true);
+            appendMessage(`<b><div >คุณ:</div></b>`, true);
             appendMessage(`<span style="background-color:#d1d5db;padding: 8px 12px; border-radius: 15px;"> ${userInput}</span>`, true);
             setIsGenerating(true); // ล็อคการถามใหม่
     
@@ -111,7 +111,7 @@ export default function ChatComponent() {
     };
 
     return (
-        <div className="w-[calc(90vw] sm:w-[calc(100%)] p-6  rounded-lg shadow-lg ">
+        <div className="w-[calc(90vw] sm:w-[calc(100%)] p-0 rounded-lg shadow-lg ">
             <div className="text-3xl mb-4">
                 ChatCANE
             </div>
@@ -120,14 +120,14 @@ export default function ChatComponent() {
                 <input
                     type="text"
                     placeholder="พิมพ์ข้อความที่นี่..."
-                    className="w-full py-2 px-4 pr-[calc(85px)]  bg-gray-300 text-gray-800 rounded-full focus:outline-none focus:ring focus:border-teal-400"
+                    className="w-full py-2 px-4 pr-[calc(85px)]  bg-gray-300 text-gray-800 rounded-md focus:outline-none focus:ring focus:border-teal-400"
                     ref={inputRef}
                     onKeyPress={handleKeyPress}
                     disabled={isGenerating} // ปิดการพิมพ์เมื่อ gen ข้อความอยู่
                 />
                 <button
                     onClick={isGenerating ? stopGenerating : sendMessage}
-                    className={`absolute right-1.5 ${isGenerating ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white font-bold py-1 px-2.5 rounded-full transition-all`}
+                    className={`absolute right-1.5 ${isGenerating ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white font-bold py-1 px-2.5 rounded-md transition-all`}
                     id="enterButton"
                 >
                     {isGenerating ? 'STOP' : 'ENTER'}
