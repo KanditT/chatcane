@@ -4,7 +4,6 @@ import "./globals.css";
 import React, { useState } from 'react';
 // import Sidebar from "./sidebar/sideMINI";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-
 // import Navbar from "./navbar/navbar";
 import { ThemeProvider } from './themeContext';
 import { FaBars } from 'react-icons/fa';
@@ -58,7 +57,7 @@ export default function Layout({ children }: LayoutProps) {
                     <SidebarProvider>
                         <AppSidebar/>
                         <main className="flex-1 h-full">
-                            <SidebarTrigger />
+                            <SidebarTrigger/>
                             {children}
                         </main>
                     </SidebarProvider>

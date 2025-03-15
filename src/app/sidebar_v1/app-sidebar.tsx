@@ -21,7 +21,7 @@ import { NavUser } from "./nav-user";
 
 import {
     Sidebar,
-    SidebarContent,
+    SidebarContent, SidebarFooter,
     SidebarHeader,
     SidebarMenuButton, SidebarMenuItem,
     // SidebarMenuItem,
@@ -143,26 +143,16 @@ const data = {
     ],
     projects: [
         {
-            name: "Design Engineering",
+            name: "Setting",
             url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Travel",
-            url: "#",
-            icon: Map,
-        },
+            icon: Settings2,
+        }
     ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const router = useRouter();
-    const { user , logout } = useUser();
+
+    const { user  } = useUser();
     if (!user) {
         return (
             <div>
@@ -190,8 +180,11 @@ console.log("User", user);
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
+                {/*<NavProjects projects={data.projects} />*/}
             </SidebarContent>
+            <SidebarFooter>
+                <NavProjects projects={data.projects} />
+            </SidebarFooter>
             <SidebarRail />
         </Sidebar>
     );

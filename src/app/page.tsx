@@ -1,8 +1,9 @@
-import Chat from "./chatv1/chat";
+import HomeContent from "./home/home";
+
 export default function Home() {
-  return (
-    <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
-      <Chat />
-    </div>
-  );
+    return (
+        <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
+            <HomeContent />
+        </div>
+    );
 }
