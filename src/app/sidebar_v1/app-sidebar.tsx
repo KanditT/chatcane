@@ -6,11 +6,9 @@ import {
     BookOpen,
     Bot,
     Command,
-    Frame,
+
     GalleryVerticalEnd,
-    Map,
-    MoreHorizontal,
-    PieChart,
+
     BadgeHelp,
     Settings2,
     SquareTerminal,
@@ -25,11 +23,10 @@ import {
     Sidebar,
     SidebarContent, SidebarFooter,
     SidebarHeader,
-    SidebarMenuButton, SidebarMenuItem,
+
     // SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
-import { useRouter } from "next/navigation";
 import { useUser } from "@/app/userState";
 
 // This is sample data.
@@ -151,12 +148,12 @@ const data = {
         },
         {
             name: "Help",
-            url: "#",
+            url: "/help",
             icon: BadgeHelp,
         },
         {
             name: "About",
-            url: "#",
+            url: "/about",
             icon: SearchSlash,
         }
     ],

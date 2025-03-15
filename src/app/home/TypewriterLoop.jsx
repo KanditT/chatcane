@@ -21,9 +21,9 @@ export default function TypewriterLoop() {
     const [isTyping, setIsTyping] = useState(true);
 
     // กำหนดความเร็วในการพิมพ์/ลบ (หน่วยเป็นมิลลิวินาที)
-    const typingSpeed = 100;    // เร็วในการพิมพ์
-    const deletingSpeed = 50;   // เร็วในการลบ
-    const pauseTime = 1500;     // เวลาหยุดพักหลังพิมพ์จบหรือหลังลบหมด
+    const typingSpeed = 90;    // เร็วในการพิมพ์
+    const deletingSpeed = 30;   // เร็วในการลบ
+    const pauseTime = 2000;     // เวลาหยุดพักหลังพิมพ์จบหรือหลังลบหมด
 
     useEffect(() => {
         // ถ้าประโยคปัจจุบันเป็น undefined ให้ข้ามป้องกัน error
@@ -64,7 +64,7 @@ export default function TypewriterLoop() {
     }, [text, isTyping, charIndex, loopNum]);
 
     return (
-        <div className="text-lg text-gray-700">
+        <div className="text-xl text-gray-700">
             {text}
             <span className="blinking-cursor">|</span>
         </div>
