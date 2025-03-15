@@ -43,22 +43,18 @@ export default function Layout({ children }: LayoutProps) {
             <head>
                 <title>ChatCane</title>
             </head>
-            <body className="bg-gray-100 h-screen overflow-hidden w-full">
+            <body className="h-screen overflow-hidden w-full">
             <UserContextProvider>
-                <div className="flex h-full">
-                    {/* Hamburger Icon for smaller screens */}
-                    <div className="sm:hidden p-4 fixed z-30">
-                        <FaBars
-                            className="text-2xl cursor-pointer"
-                            onClick={handleSidebarOpen}
-                        />
-                    </div>
+                <div className="flex h-full p-2">
                     {/* Sidebar for medium to large screens */}
                     <SidebarProvider>
                         <AppSidebar/>
                         <main className="flex-1 h-full">
-                            <SidebarTrigger/>
-                            {children}
+                            <SidebarTrigger />
+                            <div className="flex flex-col h-full p-2">
+                                {children}
+                            </div>
+
                         </main>
                     </SidebarProvider>
 

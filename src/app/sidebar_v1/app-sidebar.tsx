@@ -11,8 +11,10 @@ import {
     Map,
     MoreHorizontal,
     PieChart,
+    BadgeHelp,
     Settings2,
     SquareTerminal,
+    SearchSlash
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
@@ -146,6 +148,16 @@ const data = {
             name: "Setting",
             url: "#",
             icon: Settings2,
+        },
+        {
+            name: "Help",
+            url: "#",
+            icon: BadgeHelp,
+        },
+        {
+            name: "About",
+            url: "#",
+            icon: SearchSlash,
         }
     ],
 };
