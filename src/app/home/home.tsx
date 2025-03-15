@@ -2,7 +2,7 @@
 import React from "react";
 import { useUser } from "../userState";
 import MainPage from "./mainpage";
-import Chat from '../chatv1/chat'
+import Chat from '../chatSection/chat'
 
 export default function Home() {
     const { user } = useUser();

@@ -41,10 +41,10 @@ const MainPage = () => {
                 <h1 className="text-5xl font-extrabold mb-6">ChatCoE</h1>
                 <TypewriterLoop />
                 <div className="flex flex-col gap-4 justify-center mt-8 flex-wrap items-center w-full">
-                    <Button onClick={handleLogin} className="px-20 py-6 text-lg rounded-2xl hover:bg-gray-200 hover:text-black  ">
+                    <Button onClick={handleLogin} className="px-48 py-6 text-lg rounded-2xl hover:bg-gray-200 hover:text-black  ">
                         Login
                     </Button>
-                    <Button onClick={handleSignup} variant="secondary" className="px-[70px] py-6 text-lg rounded-2xl hover:bg-gray-700 hover:text-white" >
+                    <Button onClick={handleSignup} variant="secondary" className="px-[180px] py-6 text-lg rounded-2xl hover:bg-gray-700 hover:text-white" >
                         Sign Up
                     </Button>
                 </div>
