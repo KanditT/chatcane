@@ -57,10 +57,10 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 
 ค่ำสั่งนี้ใช้ run ใน project
-
+```bash
 python -m venv .env # สร้าง virtual enviroment 
-
-
+```
+```bash
 .env\Scripts\activate  # Activate .env
 pip install transformers   # ติดตั้ง transformers ลงใน .env
 pip install flask  # ติดตั้ง Flask ลงใน .env ใช้ deploy และใช้งาน api web
@@ -69,4 +69,4 @@ pip install flask_cors  # ติดตั้ง flask_cors ลงใน .env ใ
 pip install rapidfuzz # ติดตั้ง rapidfuzz ลงใน .env ใช้ในการจับคู่ string 
 pip install spacy # ใช้ทำ NLP 
 python -m spacy download en_core_web_sm #โหลด modle ของ spacy ใช้ในการตัดคำ 
-
+```
