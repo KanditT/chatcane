@@ -1,99 +1,52 @@
-from flask import Flask, request, jsonify, Response, session
-import requests  # ใช้ในการ fetch data จาก URL
-from difflib import get_close_matches
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from rapidfuzz import process
-import time, re, secrets, os
-import spacy
+import requests
+import secrets
+from openai import OpenAI
 
-# โหลดโมเดลภาษาอังกฤษของ spaCy สำหรับการวิเคราะห์คำสำคัญที่แม่นยำยิ่งขึ้น
-nlp = spacy.load("en_core_web_sm")
+# Initialize OpenAI client
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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",
+)
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = secrets.token_hex(16)
 
 # Function to fetch data from URL
-def fetch_sugarcane_data():
+def fetch_data():
     url = "https://raw.githubusercontent.com/apiwatfresh/sugarcane-data/refs/heads/main/sugarcane_data.json"
     try:
         response = requests.get(url)
-        response.raise_for_status()  # ตรวจสอบว่าการร้องขอสำเร็จหรือไม่
-        return response.json()  # ดึงข้อมูล JSON จาก URL
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching data: {e}")
-        return {}  # คืนค่าข้อมูลว่างถ้า fetch ไม่สำเร็จ
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException:
+        return {}
 
-# API route สำหรับรับข้อมูลจาก React
+# Function to generate chatbot response
+def generate_response(user_input, sugarcane_info):
+    # Attempt to find closest match in fetched data
+    matches = process.extract(user_input, sugarcane_info.keys(), limit=1)
+    if matches and matches[0][1] > 75:  # threshold for matching
+        return sugarcane_info[matches[0][0]]
+    else:
+        # Fallback to OpenAI DeepSeek model
+        completion = client.chat.completions.create(
+            model="deepseek/deepseek-r1-zero:free",
+            messages=[{"role": "user", "content": user_input}],
+            extra_headers={"X-Title": "AI ChatCoE"}
+        )
+        return completion.choices[0].message.content
+
+# Route for standard response
 @app.route("/chatbot_full", methods=["GET"])
 def chatbot_full():
     user_input = request.args.get("user_input")
-    
-    # Fetch data from the external URL
-    sugarcane_info = fetch_sugarcane_data()
+    data_info = fetch_data()
+    response = generate_response(user_input, data_info)
+    return jsonify({"response": response})
 
-    full_response = generate_response(user_input, sugarcane_info)
-    return jsonify({"response": full_response})
-
-@app.route("/chatbot_stream")
-def chatbot_stream():
-    user_input = request.args.get("user_input")
-
-    # Fetch data from the external URL
-    sugarcane_info = fetch_sugarcane_data()
-
-    full_response = generate_response(user_input, sugarcane_info)
-    return Response(stream_response(full_response), content_type='text/event-stream')
-
-# ฟังก์ชันสร้าง Chatbot พร้อมกับประวัติการสนทนา
-def generate_response(prompt, sugarcane_info):
-    # ตรวจสอบว่า session มีประวัติการสนทนาอยู่หรือไม่
-    conversation_history = session.get('conversation_history', '')
-
-    # รวมประวัติการสนทนากับคำถามใหม่
-    full_prompt = conversation_history + '\n' + prompt
-
-    # ตรวจสอบว่า prompt มีคำสำคัญอะไรบ้าง โดยใช้ spaCy และ RapidFuzz
-    keywords = find_keywords(prompt, sugarcane_info.keys())
-
-    if keywords:
-        # ถ้าพบคำสำคัญที่ตรงกัน ให้ตอบข้อมูลที่เกี่ยวข้อง
-        keyword_response = ", ".join([sugarcane_info[key] for key in keywords])
-        response = f"{keyword_response}"
-    else:
-        # ค้นหาข้อมูลที่ใกล้เคียงที่สุดถ้าไม่พบคำสำคัญ โดยใช้ RapidFuzz
-        response = find_closest_topic(prompt, sugarcane_info)
-        if not response:
-            response = "ขอโทษ ฉันไม่พบข้อมูลที่เกี่ยวข้องกับคำถามนี้ กรุณาลองถามคำถามใหม่"
-
-    # อัปเดตประวัติการสนทนาใน session
-    session['conversation_history'] = full_prompt + '\n' + response
-
-    return response
-
-# ฟังก์ชันส่งข้อมูลทีละตัวอักษรผ่าน SSE
-def stream_response(response):
-    typing_delay = 0.02  # กำหนดดีเลย์ระหว่างตัวอักษร
-    for char in response:
-        yield f"data: {char}\n\n"  # ส่งตัวอักษรไปยัง client ทีละตัว
-        time.sleep(typing_delay)
-
-# ฟังก์ชันค้นหาคำสำคัญ (Keyword) โดยใช้ spaCy สำหรับการแยกคำหลัก
-def find_keywords(prompt, keyword_list):
-    doc = nlp(prompt)  # ประมวลผล prompt ผ่าน spaCy
-    found_keywords = []
-    for token in doc:
-        if token.lemma_.lower() in keyword_list:  # ใช้ lemma สำหรับการเปรียบเทียบที่แม่นยำขึ้น
-            found_keywords.append(token.lemma_)
-    return found_keywords
-
-# ฟังก์ชันค้นหาคำที่ใกล้เคียงที่สุด โดยใช้ RapidFuzz
-def find_closest_topic(prompt, info_dict):
-    matches = process.extract(prompt, info_dict.keys(), limit=1, score_cutoff=60)
-    if matches:
-        return info_dict[matches[0][0]]
-    return None
-
-# Flask run
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, threaded=True)

@@ -57,16 +57,22 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 
 ค่ำสั่งนี้ใช้ run ใน project
-
+```bash
 python -m venv .env # สร้าง virtual enviroment 
-
-
+```
+ใช้คำสั่งนี้เพื่อเปิด virtual enviroment และติดตั้ง package ที่จำเป็น
+```bash
 .env\Scripts\activate  # Activate .env
-pip install transformers   # ติดตั้ง transformers ลงใน .env
+pip install openai # ติดตั้ง openai ลงใน .env ใช้ในการใช้งาน api openai 
 pip install flask  # ติดตั้ง Flask ลงใน .env ใช้ deploy และใช้งาน api web
-pip install torch # ติดตั้ง torch ลงใน .env 
 pip install flask_cors  # ติดตั้ง flask_cors ลงใน .env ใช้เพื่อบล็อกคำขอจากโดเมนอื่นนอกเหนือจากโดเมนของเซิร์ฟเวอร์ (เชื่อม chat กับ web) 
 pip install rapidfuzz # ติดตั้ง rapidfuzz ลงใน .env ใช้ในการจับคู่ string 
-pip install spacy # ใช้ทำ NLP 
-python -m spacy download en_core_web_sm #โหลด modle ของ spacy ใช้ในการตัดคำ 
-
+pip install requests # ติดตั้ง requests ลงใน .env ใช้ในการส่ง request ไปยัง api openai 
+```
+```bash
+pip install -r requirements.txt  # Install requirements.txt
+```
+run chatbot
+```bash
+python app.py
+```
