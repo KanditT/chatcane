@@ -69,6 +69,7 @@ pip install flask_cors  # ติดตั้ง flask_cors ลงใน .env ใ
 pip install rapidfuzz # ติดตั้ง rapidfuzz ลงใน .env ใช้ในการจับคู่ string 
 pip install requests # ติดตั้ง requests ลงใน .env ใช้ในการส่ง request ไปยัง api openai 
 ```
+or
 ```bash
 pip install -r requirements.txt  # Install requirements.txt
 ```
