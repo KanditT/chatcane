@@ -71,6 +71,7 @@ pip install requests # ติดตั้ง requests ลงใน .env ใช�
 ```
 or
 ```bash
+.env\Scripts\activate  # Activate .env
 pip install -r requirements.txt  # Install requirements.txt
 ```
 run chatbot
