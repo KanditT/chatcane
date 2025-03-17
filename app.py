@@ -5,23 +5,36 @@ import requests
 import secrets
 from openai import OpenAI
 
-# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
-app.secret_key = secrets.token_hex(16)  # ใช้สำหรับ session management
+app.secret_key = secrets.token_hex(16)  # สำหรับจัดการ session
 
-# Default model
-model_name = "llama-3.3-70b-instruct:free"
+# -----------------------------
+# กำหนดชื่อโมเดล
+# -----------------------------
+model_name = "gemma-3-12b-it:free"
+my_site_url = "https://openrouter.ai/api/v1"
+my_site_name = "AI ChatCoE"
+# -----------------------------
+# ฟังก์ชันเลือกโมเดล (กรณีต้องการเพิ่มโมเดลอื่นในอนาคต)
+# -----------------------------
 
 
-def get_model():
-    """ดึงชื่อโมเดลที่ถูกตั้งค่า"""
+def get_model(model_name):
+    """
+    ฟังก์ชันสำหรับส่งคืนชื่อโมเดล
+    """
     return model_name
 
-# Function to fetch data
+# -----------------------------
+# ฟังก์ชันดึงข้อมูลจาก URL
+# -----------------------------
 
 
 def fetch_data():
+    # """
+    # ฟังก์ชันดึงข้อมูลจาก URL (ตัวอย่างเป็น data.json)
+    # """
     # url = "https://raw.githubusercontent.com/apiwatfresh/sugarcane-data/refs/heads/main/sugarcane_data.json"
     # try:
     #     response = requests.get(url)
@@ -30,66 +43,141 @@ def fetch_data():
     # except requests.exceptions.RequestException:
     return {}
 
-# Function to generate chatbot response with context history
+# -----------------------------
+# ฟังก์ชันเรียกโมเดลตามชื่อที่กำหนด
+# -----------------------------
 
 
-def generate_response(user_input, sugarcane_info, chat_history):
+def response_model(selected_model_name, chat_history):
+    """
+    เรียกใช้งานโมเดลต่าง ๆ ผ่าน openrouter.ai โดยส่ง chat_history ไปยัง API
+    """
+    # ตรวจสอบว่าเป็นโมเดลไหน
+    if selected_model_name == "deepseek-r1-zero:free":
+        client = OpenAI(
+            base_url=my_site_url,
+            # ใส่ API Key ของคุณ
+            api_key="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",
+        )
+        completion = client.chat.completions.create(
+            model="deepseek/deepseek-r1-zero:free",
+            messages=chat_history,
+            extra_headers={"X-Title": my_site_name}
+        )
+        return completion.choices[0].message.content
+
+    elif selected_model_name == "llama-3.3-70b-instruct:free":
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            # ใส่ API Key ของคุณ
+            api_key="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",
+        )
+        completion = client.chat.completions.create(
+            extra_headers={
+                "HTTP-Referer": my_site_url,  # optional
+                "X-Title": my_site_name,  # optional
+            },
+            extra_body={},
+            model="meta-llama/llama-3.3-70b-instruct:free",
+            messages=chat_history
+        )
+        return completion.choices[0].message.content
+    elif selected_model_name == "gemma-3-12b-it:free":
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key="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",
+        )
+        completion = client.chat.completions.create(
+            extra_headers={
+                # Optional. Site URL for rankings on openrouter.ai.
+                "HTTP-Referer": my_site_url,
+                # Optional. Site title for rankings on openrouter.ai.
+                "X-Title": my_site_name,
+            },
+            extra_body={},
+            model="google/gemma-3-12b-it:free",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "What is in this image?"
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                            }
+                        }
+                    ]
+                }
+            ]
+        )
+        return completion.choices[0].message.content
+    else:
+        # ถ้ายังไม่มีโมเดลอื่น หรือโมเดลไม่ตรง
+        return "ไม่พบโมเดลที่ระบุ หรือยังไม่ได้สนับสนุนโมเดลนี้"
+
+# -----------------------------
+# ฟังก์ชันหลักสำหรับประมวลผลคำถาม
+# -----------------------------
+
+
+def generate_response(user_input, data_info, chat_history):
+    """
+    1) เพิ่มข้อความ user เข้าไปใน chat_history
+    2) ตรวจสอบข้อมูลใน data_info หากเจอ match > 75% ก็ใช้ข้อมูลนั้นเป็นคำตอบ
+    3) ถ้าไม่เจอ match หรือ match น้อยไป ให้เรียกโมเดลด้วย response_model
+    4) บันทึกคำตอบสุดท้ายของโมเดลเข้า chat_history ก่อน return
+    """
+    # 1) เก็บข้อความ user
     chat_history.append({"role": "user", "content": user_input})
 
-    # ตรวจสอบข้อมูลใน dataset ก่อน
-    matches = process.extract(user_input, sugarcane_info.keys(), limit=1)
+    # 2) พยายามหา match ในข้อมูล data_info
+    matches = process.extract(user_input, data_info.keys(), limit=1)
     if matches and matches[0][1] > 75:
-        response_text = sugarcane_info[matches[0][0]]
+        response_text = data_info[matches[0][0]]
     else:
-        response_text = query_model(get_model(), chat_history)
+        # 3) ถ้าไม่ match ให้ส่งไปที่โมเดลตามที่กำหนด
+        selected_model = get_model(model_name)
+        response_text = response_model(selected_model, chat_history)
 
+    # 4) เก็บคำตอบของโมเดลในประวัติการสนทนา
     chat_history.append({"role": "assistant", "content": response_text})
+
     return response_text
 
-
-def query_model(model_name, chat_history):
-    """ฟังก์ชันเลือกโมเดลที่ต้องการใช้"""
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key="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",
-    )
-
-    if model_name == "deepseek-r1-zero:free":
-        model = "deepseek/deepseek-r1-zero:free"
-    elif model_name == "llama-3.3-70b-instruct:free":
-        model = "meta-llama/llama-3.3-70b-instruct:free"
-    else:
-        return "Model not supported"
-
-    completion = client.chat.completions.create(
-        model=model,
-        messages=chat_history,  # ใช้ประวัติสนทนาเป็น context
-        extra_headers={"X-Title": "AI ChatCoE"}
-    )
-
-    return completion.choices[0].message.content
-
-# Route for chatbot
+# -----------------------------
+# Route หลักสำหรับ Chatbot
+# -----------------------------
 
 
 @app.route("/chatbot_full", methods=["GET"])
 def chatbot_full():
-    user_input = request.args.get("user_input")
+    """
+    รับพารามิเตอร์ user_input ผ่าน query param แล้วส่งข้อความไปประมวลผล
+    """
+    user_input = request.args.get("user_input", "")
+    # ดึงข้อมูลจาก API ภายนอก
+    data_info = fetch_data()
 
-    # ใช้ session เก็บประวัติการสนทนา
+    # ใช้ session ใน Flask เพื่อเก็บ chat_history
     if "chat_history" not in session:
         session["chat_history"] = []
 
-    data_info = fetch_data()
-
+    # เรียกฟังก์ชันประมวลผล
     response = generate_response(
         user_input, data_info, session["chat_history"])
 
-    # จำกัดขนาดของ chat history
+    # ตัดแชทเก่าทิ้งออก ถ้ามียาวเกินไป กัน memory เต็ม
     session["chat_history"] = session["chat_history"][-10:]
 
-    return jsonify({"response": response, "model": get_model()})
+    return jsonify({"response": response})
 
 
+# -----------------------------
+# เริ่มรันเซิร์ฟเวอร์
+# -----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, threaded=True, debug=True)
