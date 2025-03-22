@@ -3,7 +3,11 @@ from flask_cors import CORS
 from rapidfuzz import process
 import requests
 import secrets
-from openai import OpenAI
+import os
+from openai import OpenAI, AzureOpenAI
+import dotenv
+
+dotenv.load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -12,7 +16,7 @@ app.secret_key = secrets.token_hex(16)  # สำหรับจัดการ s
 # -----------------------------
 # กำหนดชื่อโมเดล
 # -----------------------------
-model_name = "gemma-3-12b-it:free"
+model_name = "gpt-35-turbo"
 my_site_url = "https://openrouter.ai/api/v1"
 my_site_name = "AI ChatCoE"
 # -----------------------------
@@ -57,7 +61,7 @@ def response_model(selected_model_name, chat_history):
         client = OpenAI(
             base_url=my_site_url,
             # ใส่ API Key ของคุณ
-            api_key="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",
+            api_key=os.getenv("DEEPSEEKR1_0_KEY"),
         )
         completion = client.chat.completions.create(
             model="deepseek/deepseek-r1-zero:free",
@@ -70,7 +74,7 @@ def response_model(selected_model_name, chat_history):
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             # ใส่ API Key ของคุณ
-            api_key="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",
+            api_key=os.getenv("LLAMA_33_KEY"),
         )
         completion = client.chat.completions.create(
             extra_headers={
@@ -85,7 +89,7 @@ def response_model(selected_model_name, chat_history):
     elif selected_model_name == "gemma-3-12b-it:free":
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
-            api_key="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",
+            api_key=os.getenv("GEMMA_3_KEY"),
         )
         completion = client.chat.completions.create(
             extra_headers={
@@ -113,6 +117,45 @@ def response_model(selected_model_name, chat_history):
                     ]
                 }
             ]
+        )
+        return completion.choices[0].message.content
+    elif selected_model_name == "gpt-35-turbo":
+        endpoint = os.getenv(
+            "ENDPOINT_URL", "https://apiwa-m6rl3g3u-eastus2.openai.azure.com/")
+
+        deployment = os.getenv("DEPLOYMENT_NAME", "gpt-35-turbo")
+        subscription_key = os.getenv(
+            "AZURE_OPENAI_API_KEY", "REPLACE_WITH_YOUR_KEY_VALUE_HERE")
+
+        # Initialize Azure OpenAI Service client with key-based authentication
+        client = AzureOpenAI(
+            azure_endpoint=endpoint,
+            api_key=subscription_key,
+            api_version="2024-05-01-preview",
+        )
+
+        # Prepare the chat prompt
+        chat_prompt = [
+            {
+                "role": "user",
+                "content": chat_history
+            }
+        ]
+
+        # Include speech result if speech is enabled
+        messages = chat_prompt
+
+        # Generate the completion
+        completion = client.chat.completions.create(
+            model=deployment,
+            messages=messages,
+            max_tokens=800,
+            temperature=0.7,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=None,
+            stream=False
         )
         return completion.choices[0].message.content
     else:
