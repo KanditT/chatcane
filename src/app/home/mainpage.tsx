@@ -17,67 +17,100 @@ const MainPage = () => {
     };
 
     return (
-        <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* สี่เหลี่ยมตกแต่งพื้นหลัง (ตัวอย่าง) */}
-            <div className="absolute z-[-10] top-[-4rem] left-[-10rem] w-24 h-24 sm:w-16 sm:h-16 md:w-32 md:h-32 bg-blue-200 rounded-md rotate-[30deg]" />
-            <div className="absolute z-[-10] top-[10%] left-[5%] w-32 h-32 sm:w-20 sm:h-20 md:w-40 md:h-40 bg-pink-200 rounded-lg rotate-[45deg]" />
-            <div className="absolute z-[-10] top-[5%] right-[5%] w-24 h-24 sm:w-12 sm:h-12 md:w-24 md:h-24 bg-green-200 rounded-md rotate-[200deg]" />
-            <div className="absolute z-[-10] bottom-[15%] left-[15%] w-36 h-36 sm:w-24 sm:h-24 md:w-48 md:h-48 bg-yellow-200 rounded-md rotate-[300deg]" />
-            <div className="absolute z-[-10] bottom-[80%] right-[50%] w-40 h-40 sm:w-24 sm:h-24 md:w-42 md:h-42 bg-red-200 rounded-lg rotate-[20deg]" />
-            <div className="absolute z-[-10] top-[30%] left-[75%] w-28 h-28 sm:w-20 sm:h-20 md:w-36 md:h-36 bg-purple-200 rounded-xl rotate-[25deg]" />
-            <div className="absolute z-[-10] bottom-[30%] left-[70%] w-28 h-28 sm:w-20 sm:h-20 md:w-36 md:h-36 bg-indigo-200 rounded-md rotate-[35deg]" />
-            <div className="absolute z-[-10] bottom-[5%] right-[5%] w-20 h-64 sm:w-16 sm:h-16 md:w-28 md:h-28 bg-lime-200 rounded-lg rotate-[40deg]" />
-
-            {/* คอนเทนต์หลัก */}
-            <div className="z-10 text-center px-4">
-                {/* รูปภาพอยู่ตรงกลาง */}
-                <div className="flex justify-center mb-6">
+        <div className="min-h-screen bg-white text-gray-900 flex flex-col items-center justify-center overflow-y-auto">
+            {/* HERO SECTION */}
+            <section className="flex flex-col items-center justify-center px-4 py-16 text-center">
+                <div className="mb-6">
                     <img
-                        src="https://scontent.fnak4-2.fna.fbcdn.net/v/t1.15752-9/482762607_625839653544812_2685628940006816906_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_ohc=5EDyzLtu3PMQ7kNvgHjyjTm&_nc_oc=Adh5BPlI4kPPIyKxCEeSGzXb5BWnSaTORw-zYzR5zXHtj-faOs0vzT1csx0cGi3aVa4&_nc_ad=z-m&_nc_cid=1277&_nc_zt=23&_nc_ht=scontent.fnak4-2.fna&oh=03_Q7cD1wEtkQpQMNVk5CnJJLcPheNtbCbDpydECS1ZtUiRSjTaZw&oe=67FCE7CC"
+                        src="https://scontent.fkkc4-2.fna.fbcdn.net/v/t1.15752-9/485169210_646095441540595_4536175206696792204_n.png?_nc_cat=107&ccb=1-7&_nc_sid=9f807c&_nc_ohc=DKTs2RquwQwQ7kNvgErUP79&_nc_oc=AdlYuUpl8PcqQlULdLA6ZA40xwKmZqFMk-DI_skPPgSfz-SEDmgcwWWba-_Mz5N5RTyibsFLCCNvxEBB2NkP-Z0v&_nc_zt=23&_nc_ht=scontent.fkkc4-2.fna&oh=03_Q7cD1wEEOqV49pxDZexZ89dtuM6RuIomtVLJ2lkezNkpz1LpxQ&oe=6807A75C"
                         alt="ChatCane Logo"
-                        className="w-32 h-40"
+                        className="w-32 h-40 mx-auto"
                     />
                 </div>
-                <h1 className="text-5xl font-extrabold mb-6">ChatCoE</h1>
+                <h1 className="text-5xl font-extrabold mb-4 tracking-tight">ChatCoE</h1>
                 <TypewriterLoop />
-                <div className="flex flex-col gap-4 justify-center mt-8 flex-wrap items-center w-full">
-                    <Button onClick={handleLogin} className="px-48 py-6 text-lg rounded-2xl hover:bg-gray-200 hover:text-black  ">
+
+                {/* CTA BUTTONS */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 w-full max-w-md  mx-auto">
+                    <Button
+                        onClick={handleLogin}
+                        className="w-full py-4 text-lg w-36 rounded-xl bg-black text-white hover:bg-gray-800"
+                    >
                         Login
                     </Button>
-                    <Button onClick={handleSignup} variant="secondary" className="px-[180px] py-6 text-lg rounded-2xl hover:bg-gray-700 hover:text-white" >
+                    <Button
+                        onClick={handleSignup}
+                        variant="secondary"
+                        className="w-36 py-4 text-lg rounded-xl border-gray-300 hover:bg-gray-200"
+                    >
                         Sign Up
                     </Button>
                 </div>
+            </section>
 
-            </div>
+            {/* FEATURE SECTION */}
+            <section className=" py-16 px-4">
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <FeatureCard
+                        icon="🔒"
+                        title="Authentication"
+                        description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium."
+                    />
+                    <FeatureCard
+                        icon="⚙️"
+                        title="Developer First"
+                        description="Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    />
+                </div>
+            </section>
 
+
+
+            {/* Optional blinking cursor style */}
             <style jsx>{`
-                .blinking-cursor {
-                    font-weight: 100;
-                    font-size: 1rem;
-                    color: #333;
-                    animation: blink 0.7s infinite;
-                }
-                @keyframes blink {
-                    0% {
-                        opacity: 1;
-                    }
-                    49% {
-                        opacity: 1;
-                    }
-                    50% {
-                        opacity: 0;
-                    }
-                    99% {
-                        opacity: 0;
-                    }
-                    100% {
-                        opacity: 1;
-                    }
-                }
-            `}</style>
+        .blinking-cursor {
+          font-weight: 100;
+          font-size: 1rem;
+          color: #333;
+          animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+          0%,
+          49% {
+            opacity: 1;
+          }
+          50%,
+          99% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      `}</style>
         </div>
     );
 };
+
+// Feature card component
+function FeatureCard({
+                         icon,
+                         title,
+                         description,
+                     }: {
+    icon: string;
+    title: string;
+    description: string;
+}) {
+    return (
+        <div className="flex items-start space-x-4">
+            <div className="text-3xl">{icon}</div>
+            <div>
+                <h4 className="text-lg font-semibold mb-1">{title}</h4>
+                <p className="text-sm text-muted-foreground">{description}</p>
+            </div>
+        </div>
+    );
+}
 
 export default MainPage;

@@ -1,77 +1,86 @@
-'use client';
+"use client";
 
 import "./globals.css";
-import React, { useState } from 'react';
-// import Sidebar from "./sidebar/sideMINI";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-// import Navbar from "./navbar/navbar";
-import { ThemeProvider } from './themeContext';
+import React, { ReactNode } from "react";
+import { ThemeProvider } from "./themeContext";
 
-import { ReactNode } from 'react';
+// import ไฟล์ Context ของคุณ
 import { UserContextProvider } from "./userState";
-import {AppSidebar} from "@/app/sidebar_v1/app-sidebar";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import { useUser } from "@/app/userState";
-// import { Login } from "@/app/login";
 
+// import ส่วนประกอบอื่น ๆ
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/app/sidebar_v1/app-sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+// import useUser เพื่อเรียกค่าภายใน Layout ได้
+import { useUser } from "@/app/userState";
+import {useRouter} from "next/navigation";
 
 interface LayoutProps {
     children: ReactNode;
 }
 
-export default function Layout({ children }: LayoutProps) {
 
+
+/**
+ * แยก Component ย่อยสำหรับส่วน “Content” ภายใน Layout
+ * เพื่อให้โค้ดอ่านง่าย และเห็นชัดเจนว่าถูกห่อด้วย Provider
+ */
+function LayoutContent({ children }: { children: ReactNode }) {
+    // เรียก user จาก Context
     const { user } = useUser();
+    const router = useRouter();
 
     return (
+        <div className="flex h-screen">
+            {/* Sidebar */}
+            <SidebarProvider>
+                <AppSidebar />
+
+                <main className="flex-1 h-screen">
+                    {/* ตัวอย่างเงื่อนไข ถ้าไม่มี user ให้แสดง Logo + Avatar */}
+                    {user && (
+                        <div className="sticky top-0  bg-background w-full pr-2  border-b flex items-center justify-between bg-white " >
+                            <SidebarTrigger />
+                            <img
+                                src="https://scontent.fkkc4-2.fna.fbcdn.net/v/t1.15752-9/485169210_646095441540595_4536175206696792204_n.png?_nc_cat=107&ccb=1-7&_nc_sid=9f807c&_nc_ohc=DKTs2RquwQwQ7kNvgErUP79&_nc_oc=AdlYuUpl8PcqQlULdLA6ZA40xwKmZqFMk-DI_skPPgSfz-SEDmgcwWWba-_Mz5N5RTyibsFLCCNvxEBB2NkP-Z0v&_nc_zt=23&_nc_ht=scontent.fkkc4-2.fna&oh=03_Q7cD1wEEOqV49pxDZexZ89dtuM6RuIomtVLJ2lkezNkpz1LpxQ&oe=6807A75C"
+                                alt="ChatCane Logo"
+                                className="h-14 py-2 cursor-pointer"
+                                onClick={() => router.push("/")}
+                            />
+                            <Avatar className="h-8 w-8 rounded-full ">
+                                <AvatarImage src="/avatars/shadcn.jpg" alt="logo" />
+                                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                            </Avatar>
+                        </div>
+                    )}
+
+
+                    <div className="flex flex-col h-screen p-2">{children}</div>
+                </main>
+            </SidebarProvider>
+
+        </div>
+    );
+}
+
+/**
+ * Layout หลัก
+ */
+export default function Layout({ children }: LayoutProps) {
+    return (
+        <html lang="en">
+        <head>
+            <title>ChatCane</title>
+        </head>
+        <body className="h-screen overflow-y-auto w-full z-0 pb-8">
+        {/* ห่อ ThemeProvider + UserContextProvider ระดับบนสุด */}
         <ThemeProvider>
-            <html lang="en">
-            <head>
-                <title>ChatCane</title>
-            </head>
-            <body className="h-screen overflow-hidden w-full">
             <UserContextProvider>
-                <div className="flex h-screen ">
-                    {/* Sidebar for medium to large screens */}
-                    <SidebarProvider>
-                        <AppSidebar/>
-                        <main className="flex-1 h-screen">
-                            {user && (
-                                <div className="flex flex-row items-center justify-between w-full pr-3">
-                                    <SidebarTrigger/>
-                                    <img
-                                        src="https://scontent.fkkc4-2.fna.fbcdn.net/v/t1.15752-9/484277065_1352979129178010_3750569693927337592_n.png?_nc_cat=106&ccb=1-7&_nc_sid=9f807c&_nc_ohc=diKcDqcR7NYQ7kNvgHT_ROG&_nc_oc=Adi_8sgZ0lYiv7klU1GzLB6gWpYCyC6qLO_YOS2YoDkmthj3dQj_r3tBZsUeHdN9T7gUN3Cut8efNzKahM_vMwRR&_nc_zt=23&_nc_ht=scontent.fkkc4-2.fna&oh=03_Q7cD1wHFrdbZ9iytbaGHkW-lhwYKRSov9S2Npykj0LSsnVWK5Q&oe=67FD50AF"
-                                        alt="ChatCane Logo"
-                                        className="w-30 h-16 pt-5"
-                                    />
-                                    <Avatar className="h-8 w-8 rounded-full">
-                                        <AvatarImage src='/avatars/shadcn.jpg' alt='logo'/>
-                                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                                    </Avatar>
-                                </div>
-
-                            )}
-
-                            <div className="flex flex-col h-screen p-2">
-                                {children}
-                            </div>
-
-
-                        </main>
-                    </SidebarProvider>
-
-                    {/* Main Content with Navbar */}
-                    {/*<div className={flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'sm:ml-16' : 'sm:ml-64'} p-6}>*/}
-                    {/*  <Navbar isSidebarCollapsed={isSidebarCollapsed} />*/}
-                    {/*  <div className=" mt-6 flex-1">*/}
-
-                    {/*    {children}*/}
-                    {/*  </div>*/}
-                    {/*</div>*/}
-                </div>
+                <LayoutContent>{children}</LayoutContent>
             </UserContextProvider>
-            </body>
-            </html>
         </ThemeProvider>
+        </body>
+        </html>
     );
 }

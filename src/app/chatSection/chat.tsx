@@ -1,14 +1,25 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkBreaks from "remark-breaks";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
+import "katex/dist/katex.min.css";
 import "./chat.css";
+import { Bot, BrainCog } from "lucide-react";
+
 
 interface Message {
   text: string;
   isUser: boolean;
+  elapsedTime?: number; // เพิ่มเพื่อเก็บเวลาเฉพาsะแต่ละข้อความ
 }
+
 
 export default function ChatComponent() {
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -16,6 +27,10 @@ export default function ChatComponent() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputLocked, setInputLocked] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<number | null>(null);
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (messagesRef.current) {
@@ -25,15 +40,39 @@ export default function ChatComponent() {
 
   const typeBotResponse = (response: string) => {
     let idx = 0;
-    const interval = setInterval(() => {
+    const start = Date.now();
+    setIsGenerating(true);
+
+    typingIntervalRef.current = setInterval(() => {
       if (idx <= response.length) {
-        setMessages((prev) => [
-          ...prev.slice(0, -1),
-          { text: response.slice(0, idx), isUser: false },
-        ]);
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            text: response.slice(0, idx),
+            isUser: false,
+          };
+          return newMessages;
+        });
         idx++;
       } else {
-        clearInterval(interval);
+        clearInterval(typingIntervalRef.current!);
+        typingIntervalRef.current = null;
+
+        const end = Date.now();
+        const duration = (end - start) / 1000;
+
+        // บันทึกเวลาเฉพาะในข้อความสุดท้าย
+        setMessages((prev) => {
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          updated[updated.length - 1] = {
+            ...last,
+            elapsedTime: duration,
+          };
+          return updated;
+        });
+
+        setIsGenerating(false);
       }
     }, 30);
   };
@@ -44,29 +83,41 @@ export default function ChatComponent() {
 
     setMessages((prev) => [...prev, { text: userInput, isUser: true }]);
     setInputLocked(true);
+    setIsGenerating(true);
+    setStartTime(Date.now());
+    setElapsedTime(null);
 
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
+    if (inputRef.current) inputRef.current.value = "";
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: `<span class="animate-dots">
+    <span></span><span></span><span></span>
+  </span>`,
+        isUser: false,
+      },
+    ]);
 
     try {
       const response = await fetch(
-          `http://localhost:5000/chatbot_full?user_input=${encodeURIComponent(
-              userInput
-          )}`,
+          `http://localhost:5001/chatbot_full?user_input=${encodeURIComponent(userInput)}`,
           { method: "GET" }
       );
-
       const data = await response.json();
 
-      setMessages((prev) => [...prev, { text: "", isUser: false }]);
-      typeBotResponse(data.response);
+      let botText = data.response;
+      botText = botText.replace(/(\d+)\.\s/g, "$1\\. ");
+      botText = botText.replace(/^\*\s*เฉลย/m, "* **เฉลย**");
+
+      typeBotResponse(botText);
     } catch (error) {
       console.error("Error fetching response:", error);
       setMessages((prev) => [
         ...prev,
         { text: "ไม่สามารถติดต่อกับ Chatbot ได้.", isUser: false },
       ]);
+      setIsGenerating(false);
     } finally {
       setInputLocked(false);
     }
@@ -89,7 +140,7 @@ export default function ChatComponent() {
         {messages.length > 0 && (
             <div
                 ref={messagesRef}
-                className="w-full xl:w-1/2 h-full overflow-y-auto p-4"
+                className="w-full xl:w-2/3 h-full overflow-y-auto p-4"
             >
               {messages.map((msg, idx) => (
                   <div
@@ -99,20 +150,48 @@ export default function ChatComponent() {
                       }`}
                   >
                     <div
-                        className={`px-4 py-2 rounded-full text-xm max-w-[70%] break-words ${
+                        className={`px-4 py-2 rounded-xl text-sm break-words max-w-[70%] ${
                             msg.isUser
-                                ? "border text-gray-900 bg-gray-100"
-                                : "text-gray-800"
+                                ? "text-white bg-purple-900"
+                                : "text-gray-800 bg-white"
                         }`}
                     >
-                      {msg.text}
+                      {msg.isUser ? (
+                          msg.text
+                      ) : (
+
+                          <div className="flex flex-col gap-1">
+                            <div className='flex items-center gap-1'>
+                                  <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                                    <Bot className="w-4 h-4" />
+                                    <span>CoE Assistant</span>
+                                  </div>
+
+                              {msg.elapsedTime && (
+                                  <div className="text-xs text-muted-foreground mb-1">
+                                    ดำเนินการเสร็จสิ้น ใช้เวลาทั้งหมด {msg.elapsedTime.toFixed(2)} วินาที
+                                  </div>
+                              )}
+                            </div>
+
+
+
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                                rehypePlugins={[rehypeKatex, rehypeRaw]}
+                            >
+                              {msg.text}
+                            </ReactMarkdown>
+                          </div>
+                      )}
+
                     </div>
                   </div>
               ))}
             </div>
         )}
 
-        <div className="w-full xl:w-1/2 relative flex items-center bg-white rounded-full px-4 py-2">
+        <div className="w-full xl:w-2/3 relative flex items-center bg-white rounded-full px-4 py-2">
           <Input
               placeholder="จะทำอะไรให้ดี?"
               ref={inputRef}

@@ -14,14 +14,22 @@ import {
     SquareTerminal,
     SearchSlash
 } from "lucide-react";
-
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
 import { NavUser } from "./nav-user";
 
 import {
     Sidebar,
-    SidebarContent, SidebarFooter,
+    SidebarContent, SidebarFooter, SidebarGroupLabel,
     SidebarHeader,
 
     // SidebarMenuItem,
@@ -186,6 +194,20 @@ console.log("User", user);
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
                 <NavUser user={{ name: 'Nawamin Onkhwan', email: user, avatar: "/avatars/shadcn.jpg" }} />
+                <Select>
+                    <SidebarGroupLabel>Model</SidebarGroupLabel>
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a Model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Model</SelectLabel>
+                            <SelectItem value="apple">Lama3</SelectItem>
+                            <SelectItem value="banana">ChatGpt4o4gPlus</SelectItem>
+                            <SelectItem value="blueberry">Deepseek</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />

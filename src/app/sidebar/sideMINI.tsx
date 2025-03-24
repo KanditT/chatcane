@@ -50,6 +50,22 @@ const teamMembers = [
         instagramUrl: "https://www.instagram.com/early07_00/",
         instagramUsername: "early07_00",
         profileImage: yanasorn,
+    },{
+        name: "Nawamin Onkhwan",
+        githubUrl: "https://github.com/Carely-Dev",
+        githubUsername: "Carely-Dev",
+        stuID: "653040132-0",
+        instagramUrl: "https://www.instagram.com/9nigx_tt?igsh=MW50dHZiNDFlbG0zZA%3D%3D&utm_source=qr",
+        instagramUsername: "9nigx_tt",
+        profileImage:apiwat,
+    },{
+        name: "Kritsada Mahanam",
+        githubUrl: "https://github.com/kritsada653040438",
+        githubUsername: "kritsada653040438",
+        stuID: "653040438-6",
+        instagramUrl: "https://www.instagram.com/pleumksdx_/",
+        instagramUsername: "pleumksdx_",
+        profileImage: apiwat,
     },
 ];
 

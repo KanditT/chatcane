@@ -9,6 +9,8 @@ import dotenv
 
 dotenv.load_dotenv()
 
+
+
 app = Flask(__name__)
 CORS(app)
 app.secret_key = secrets.token_hex(16)  # สำหรับจัดการ session
@@ -16,7 +18,7 @@ app.secret_key = secrets.token_hex(16)  # สำหรับจัดการ s
 # -----------------------------
 # กำหนดชื่อโมเดล
 # -----------------------------
-model_name = "gpt-35-turbo"
+model_name = "llama-3.3-70b-instruct:free"
 my_site_url = "https://openrouter.ai/api/v1"
 my_site_name = "AI ChatCoE"
 # -----------------------------
@@ -61,7 +63,7 @@ def response_model(selected_model_name, chat_history):
         client = OpenAI(
             base_url=my_site_url,
             # ใส่ API Key ของคุณ
-            api_key=os.getenv("DEEPSEEKR1_0_KEY"),
+            api_key='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',
         )
         completion = client.chat.completions.create(
             model="deepseek/deepseek-r1-zero:free",
@@ -74,7 +76,7 @@ def response_model(selected_model_name, chat_history):
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             # ใส่ API Key ของคุณ
-            api_key=os.getenv("LLAMA_33_KEY"),
+            api_key='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',
         )
         completion = client.chat.completions.create(
             extra_headers={
@@ -169,27 +171,44 @@ def response_model(selected_model_name, chat_history):
 
 def generate_response(user_input, data_info, chat_history):
     """
-    1) เพิ่มข้อความ user เข้าไปใน chat_history
-    2) ตรวจสอบข้อมูลใน data_info หากเจอ match > 75% ก็ใช้ข้อมูลนั้นเป็นคำตอบ
-    3) ถ้าไม่เจอ match หรือ match น้อยไป ให้เรียกโมเดลด้วย response_model
-    4) บันทึกคำตอบสุดท้ายของโมเดลเข้า chat_history ก่อน return
+    1) เพิ่ม system message เพื่อกำหนด persona
+    2) เพิ่มข้อความ user เข้าไปใน chat_history
+    3) ตรวจสอบข้อมูลใน data_info หากเจอ match > 75% ก็ใช้ข้อมูลนั้นเป็นคำตอบ
+    4) ถ้าไม่เจอ match หรือ match น้อยไป ให้เรียกโมเดลด้วย response_model
+    5) บันทึกคำตอบสุดท้ายของโมเดลเข้า chat_history ก่อน return
     """
-    # 1) เก็บข้อความ user
+
+    # 1) ถ้ายังไม่มี system message ให้เพิ่ม
+    if not any(msg["role"] == "system" for msg in chat_history):
+        chat_history.insert(0, {
+            "role": "system",
+            "content": (
+                "คุณคือครูคณิตศาสตร์ระดับผู้เชี่ยวชาญที่สามารถอธิบายเนื้อหาทุกระดับตั้งแต่พื้นฐานถึงขั้นสูง "
+                "คุณสื่อสารอย่างชัดเจน ใช้ภาษาที่เข้าใจง่าย มีความอดทน ใจดี และมักยกตัวอย่างประกอบเพื่อให้ผู้เรียนเข้าใจได้ง่ายขึ้น "
+                "หากคำถามไม่ชัดเจน คุณจะช่วยผู้เรียนตีความและชี้แนะอย่างเป็นขั้นตอน "
+                "คุณสามารถตอบคำถามในหัวข้อเช่น พีชคณิต, เรขาคณิต, แคลคูลัส, สถิติ, ตรรกศาสตร์ ฯลฯ ได้อย่างถูกต้องและลึกซึ้ง "
+                "เป้าหมายของคุณคือให้ผู้เรียนเข้าใจจริง ไม่ใช่แค่ท่องจำ"
+            )
+        })
+
+
+    # 2) เพิ่มข้อความจาก user
     chat_history.append({"role": "user", "content": user_input})
 
-    # 2) พยายามหา match ในข้อมูล data_info
+    # 3) ตรวจสอบข้อมูล local ก่อนเรียก AI
     matches = process.extract(user_input, data_info.keys(), limit=1)
     if matches and matches[0][1] > 75:
         response_text = data_info[matches[0][0]]
     else:
-        # 3) ถ้าไม่ match ให้ส่งไปที่โมเดลตามที่กำหนด
+        # 4) ถ้าไม่เจอหรือ match น้อย ส่งไปที่ AI
         selected_model = get_model(model_name)
         response_text = response_model(selected_model, chat_history)
 
-    # 4) เก็บคำตอบของโมเดลในประวัติการสนทนา
+    # 5) เก็บคำตอบของ AI ลงใน history
     chat_history.append({"role": "assistant", "content": response_text})
 
     return response_text
+
 
 # -----------------------------
 # Route หลักสำหรับ Chatbot
@@ -223,4 +242,4 @@ def chatbot_full():
 # เริ่มรันเซิร์ฟเวอร์
 # -----------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, threaded=True, debug=True)
+    app.run(host="0.0.0.0", port=5001, threaded=True, debug=True)
