@@ -18,7 +18,7 @@ app.secret_key = secrets.token_hex(16)  # สำหรับจัดการ s
 # -----------------------------
 # กำหนดชื่อโมเดล
 # -----------------------------
-model_name = "llama-3.3-70b-instruct:free"
+model_name = "deepseek-r1-zero:free"
 my_site_url = "https://openrouter.ai/api/v1"
 my_site_name = "AI ChatCoE"
 # -----------------------------
