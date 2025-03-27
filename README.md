@@ -58,10 +58,10 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ค่ำสั่งนี้ใช้ run ใน project
 ```bash
-python -m venv .env # สร้าง virtual enviroment 
+python -m venv .venv # สร้าง virtual enviroment 
 ```
 ```bash
-.env\Scripts\activate  # Activate .env
+.venv\Scripts\activate  # Activate .env
 pip install transformers   # ติดตั้ง transformers ลงใน .env
 pip install flask  # ติดตั้ง Flask ลงใน .env ใช้ deploy และใช้งาน api web
 pip install torch # ติดตั้ง torch ลงใน .env 
